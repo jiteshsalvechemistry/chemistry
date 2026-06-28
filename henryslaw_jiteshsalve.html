@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>Henry's Law Simulation — Jitesh Salve</title>
+<style>
+:root {
+  --navy:  #0a1628;
+  --gold:  #c8a84b;
+  --red:   #c0392b;
+  --light: #f4f6fb;
+  --green: #1e8449;
+  --blue:  #1a6fa8;
+  --card:  #ffffff;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--light); color: var(--navy); }
+
+/* ── TOP WATERMARK ── */
+.wm-bar {
+  background: var(--navy);
+  color: var(--gold);
+  text-align: center;
+  padding: 7px 10px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* ── HERO ── */
+.hero {
+  background: linear-gradient(150deg, #0a1628 0%, #0d2240 50%, #112d52 100%);
+  padding: 24px 16px 20px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -40px; right: -40px;
+  width: 180px; height: 180px;
+  border-radius: 50%;
+  background: rgba(200,168,75,0.07);
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: -60px; left: -30px;
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  background: rgba(200,168,75,0.05);
+}
+.hero-chip {
+  display: inline-block;
+  background: var(--gold);
+  color: var(--navy);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  padding: 4px 14px;
+  border-radius: 20px;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+.hero h1 {
+  font-size: 28px;
+  font-weight: 900;
+  color: white;
+  letter-spacing: 2px;
+  line-height: 1.1;
+}
+.hero h1 span { color: var(--gold); }
+.hero-sub {
+  color: rgba(255,255,255,0.65);
+  font-size: 13px;
+  margin-top: 6px;
+}
+.hero-formula {
+  display: inline-block;
+  background: rgba(200,168,75,0.15);
+  border: 1px solid rgba(200,168,75,0.4);
+  color: var(--gold);
+  font-size: 20px;
+  font-weight: 800;
+  padding: 8px 24px;
+  border-radius: 12px;
+  margin-top: 14px;
+  letter-spacing: 2px;
+}
+.hero-credit {
+  color: rgba(200,168,75,0.8);
+  font-size: 11px;
+  font-style: italic;
+  margin-top: 10px;
+}
+
+/* ── TABS ── */
+.tab-bar {
+  display: flex;
+  background: white;
+  border-bottom: 3px solid var(--gold);
+  overflow-x: auto;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.tab-bar::-webkit-scrollbar { display: none; }
+.tab-btn {
+  flex: none;
+  padding: 13px 16px;
+  font-size: 12px;
+  font-weight: 800;
+  color: #999;
+  background: none;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+  font-family: inherit;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -3px;
+  letter-spacing: 0.5px;
+  transition: color 0.2s;
+}
+.tab-btn.active { color: var(--navy); border-bottom-color: var(--gold); }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* ── SECTION ── */
+.section { padding: 16px 14px; }
+.sec-title {
+  font-size: 13px;
+  font-weight: 900;
+  color: var(--navy);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  border-left: 4px solid var(--gold);
+  padding-left: 10px;
+  margin-bottom: 14px;
+}
+
+/* ── FORMULA BOXES ── */
+.fbox {
+  background: var(--navy);
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 12px;
+  text-align: center;
+}
+.fbox .main {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--gold);
+  letter-spacing: 2px;
+  margin-bottom: 6px;
+}
+.fbox .note {
+  font-size: 12px;
+  color: rgba(255,255,255,0.65);
+  line-height: 1.5;
+}
+.fbox-blue {
+  background: linear-gradient(135deg, #0d2240, #1a4070);
+}
+
+/* ── INFO CARD ── */
+.info-card {
+  background: white;
+  border-radius: 14px;
+  padding: 14px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+}
+.info-card .ic-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--navy);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.info-card p {
+  font-size: 13px;
+  color: #444;
+  line-height: 1.7;
+}
+
+/* ── APPLICATION CARDS ── */
+.app-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.app-card {
+  background: white;
+  border-radius: 14px;
+  padding: 14px 10px;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+  border-top: 3px solid var(--gold);
+}
+.app-card .app-icon { font-size: 30px; margin-bottom: 6px; }
+.app-card .app-title { font-size: 12px; font-weight: 800; color: var(--navy); margin-bottom: 4px; }
+.app-card .app-desc { font-size: 11px; color: #666; line-height: 1.4; }
+
+/* ── EXCEPTION BOX ── */
+.exc-box {
+  background: linear-gradient(135deg, #7b241c, #c0392b);
+  border-radius: 14px;
+  padding: 14px;
+  color: white;
+  font-size: 13px;
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+.exc-box strong { font-size: 14px; display: block; margin-bottom: 6px; }
+
+/* ── SLIDERS ── */
+.slider-card {
+  background: white;
+  border-radius: 14px;
+  padding: 14px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+}
+.sl-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.sl-label { font-size: 13px; font-weight: 800; color: var(--navy); }
+.sl-val {
+  background: var(--navy);
+  color: var(--gold);
+  font-size: 14px;
+  font-weight: 800;
+  padding: 3px 12px;
+  border-radius: 20px;
+  min-width: 70px;
+  text-align: center;
+}
+input[type=range] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 8px;
+  border-radius: 4px;
+  outline: none;
+  cursor: pointer;
+  margin-bottom: 4px;
+}
+input[type=range].sl-p { background: linear-gradient(to right, #1a6fa8, #7fb3d3); }
+input[type=range].sl-kh { background: linear-gradient(to right, #1e8449, #82c8a0); }
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: var(--navy);
+  border: 3px solid var(--gold);
+  cursor: pointer;
+}
+.sl-range-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: #aaa;
+}
+
+/* ── BOTTLE SIMULATION ── */
+.bottle-scene {
+  background: linear-gradient(180deg, #e8f4f8 0%, #d0eaf5 100%);
+  border-radius: 16px;
+  padding: 16px 10px;
+  margin-bottom: 14px;
+  position: relative;
+  overflow: hidden;
+  min-height: 220px;
+}
+.scene-title {
+  text-align: center;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--navy);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  opacity: 0.7;
+}
+.bottles-row {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 20px;
+}
+.bottle-wrap { text-align: center; }
+.bottle-name { font-size: 11px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+
+/* SVG bottle */
+.bottle-svg { width: 70px; height: 130px; display: block; margin: 0 auto; }
+
+/* Gas cloud above bottle */
+.gas-cloud {
+  width: 70px;
+  min-height: 24px;
+  border-radius: 12px;
+  margin: 0 auto 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  color: white;
+  transition: all 0.4s;
+}
+.pressure-arrow {
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--blue);
+  text-align: center;
+  padding-bottom: 20px;
+  transition: font-size 0.3s;
+}
+
+/* ── RESULT CARDS ── */
+.result-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+.r-card {
+  flex: 1;
+  min-width: 90px;
+  background: white;
+  border-radius: 12px;
+  padding: 12px 8px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.r-card .r-sym { font-size: 16px; font-weight: 900; margin-bottom: 3px; }
+.r-card .r-lbl { font-size: 10px; color: #777; margin-bottom: 6px; line-height: 1.3; }
+.r-card .r-val { font-size: 18px; font-weight: 800; }
+.r-card .r-unit { font-size: 10px; color: #999; }
+
+/* ── WORKING BOX ── */
+.working-box {
+  background: var(--navy);
+  border-radius: 12px;
+  padding: 14px;
+  font-size: 13px;
+  color: white;
+  line-height: 2;
+  margin-bottom: 12px;
+}
+
+/* ── GRAPH ── */
+.graph-wrap {
+  background: white;
+  border-radius: 14px;
+  padding: 14px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  margin-bottom: 14px;
+}
+canvas#graph {
+  width: 100%; height: auto; display: block; border-radius: 8px;
+}
+.legend-row {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+.leg-item { display: flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 700; }
+.leg-dot { width: 14px; height: 14px; border-radius: 50%; }
+
+/* ── SYMBOLS TABLE ── */
+.sym-table {
+  background: white;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+  margin-bottom: 14px;
+}
+.sym-row {
+  display: flex;
+  align-items: flex-start;
+  padding: 12px 14px;
+  border-bottom: 1px solid #f0f2f5;
+  gap: 12px;
+}
+.sym-row:last-child { border-bottom: none; }
+.sym-badge {
+  font-size: 15px;
+  font-weight: 900;
+  min-width: 56px;
+  text-align: center;
+  background: #f0f4f8;
+  padding: 8px 4px;
+  border-radius: 10px;
+  color: var(--navy);
+  flex-shrink: 0;
+}
+.sym-info strong { font-size: 13px; font-weight: 800; color: var(--navy); display: block; margin-bottom: 2px; }
+.sym-info span { font-size: 12px; color: #555; line-height: 1.5; }
+
+/* ── QUIZ ── */
+.quiz-card {
+  background: white;
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  margin-bottom: 10px;
+}
+.q-num { font-size: 11px; color: #aaa; font-weight: 700; margin-bottom: 6px; }
+.q-text { font-size: 14px; font-weight: 800; color: var(--navy); margin-bottom: 14px; line-height: 1.5; }
+.q-options { display: flex; flex-direction: column; gap: 8px; }
+.q-opt {
+  background: var(--light);
+  border: 2px solid #e0e4ea;
+  border-radius: 10px;
+  padding: 11px 14px;
+  font-size: 13px;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  font-weight: 600;
+  color: var(--navy);
+  transition: border-color 0.2s, background 0.2s;
+}
+.q-opt:active { transform: scale(0.99); }
+.q-opt.correct { background: #d5f5e3; border-color: #27ae60; color: #145a32; }
+.q-opt.wrong   { background: #fadbd8; border-color: #e74c3c; color: #7b241c; }
+.q-feedback {
+  margin-top: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  min-height: 18px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  display: none;
+  line-height: 1.5;
+}
+.q-feedback.show { display: block; }
+.q-feedback.ok { background: #d5f5e3; color: #145a32; }
+.q-feedback.no { background: #fadbd8; color: #7b241c; }
+.btn-next {
+  width: 100%;
+  margin-top: 12px;
+  padding: 13px;
+  background: var(--navy);
+  color: var(--gold);
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  display: none;
+  font-family: inherit;
+  letter-spacing: 0.5px;
+}
+.score-box {
+  text-align: center;
+  background: white;
+  border-radius: 16px;
+  padding: 30px 20px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  display: none;
+}
+.score-box .score-big { font-size: 52px; font-weight: 900; color: var(--navy); margin: 10px 0; }
+.score-box .score-msg { font-size: 14px; color: #555; margin-bottom: 20px; }
+.btn-restart {
+  padding: 13px 32px;
+  background: var(--navy);
+  color: var(--gold);
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+/* ── FOOTER ── */
+.footer {
+  background: var(--navy);
+  color: var(--gold);
+  text-align: center;
+  padding: 16px 12px;
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+.footer strong { display: block; font-size: 14px; margin-bottom: 4px; }
+
+/* highlight gold */
+.gold { color: var(--gold); }
+.blue { color: var(--blue); }
+.green { color: var(--green); }
+</style>
+</head>
+<body>
+
+<!-- TOP WATERMARK -->
+<div class="wm-bar">⚗️ © Jitesh Salve Chemistry Simulations — All Rights Reserved</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-chip">SYJC · Chapter 2 · Solutions · Maharashtra HSC Board</div>
+  <h1>HENRY'S <span>LAW</span></h1>
+  <div class="hero-sub">Solubility of Gases in Liquids</div>
+  <div class="hero-formula">S = K<sub style="font-size:14px;">H</sub> × P</div>
+  <div class="hero-credit">Interactive Simulation by Jitesh Salve</div>
+</div>
+
+<!-- TABS -->
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="showTab('concept',this)">📖 Concept</button>
+  <button class="tab-btn" onclick="showTab('simulate',this)">🔬 Simulate</button>
+  <button class="tab-btn" onclick="showTab('graph',this)">📈 Graph</button>
+  <button class="tab-btn" onclick="showTab('symbols',this)">🔣 Symbols</button>
+  <button class="tab-btn" onclick="showTab('quiz',this)">🧠 Quiz</button>
+</div>
+
+<!-- ═══════════ TAB 1: CONCEPT ═══════════ -->
+<div id="tab-concept" class="tab-content active">
+<div class="section">
+
+  <div class="sec-title">Statement of Henry's Law</div>
+
+  <div class="fbox">
+    <div class="main" style="font-size:15px; line-height:1.5;">
+      "The solubility of a gas in a liquid is directly proportional to the pressure of the gas over the solution"
+    </div>
+    <div class="note">— William Henry, 1803 | Maharashtra HSC Board Chapter 2</div>
+  </div>
+
+  <div class="fbox fbox-blue">
+    <div class="main">S ∝ P</div>
+    <div class="note">Solubility is proportional to Pressure</div>
+  </div>
+
+  <div class="fbox">
+    <div class="main">S = K<sub style="color:var(--gold);font-size:18px;">H</sub> × P</div>
+    <div class="note">
+      S = Solubility of gas (mol L⁻¹) &nbsp;|&nbsp; P = Pressure of gas (bar)<br/>
+      K<sub style="font-size:11px;">H</sub> = Henry's Law Constant (mol L⁻¹ bar⁻¹)
+    </div>
+  </div>
+
+  <div class="info-card">
+    <div class="ic-title">💡 The Simple Idea</div>
+    <p>Imagine a bottle of cold drink (soda). It is sealed with <strong>high pressure</strong> of CO₂ gas inside. Because of that high pressure, lots of CO₂ gas gets dissolved in the liquid. The moment you open the bottle — <strong>pressure drops</strong> — and all that dissolved gas escapes as bubbles! That's exactly Henry's Law.</p>
+    <br/>
+    <p><strong>More pressure → more gas dissolves. Less pressure → less gas dissolves.</strong></p>
+  </div>
+
+  <!-- When K_H is given (alternate form) -->
+  <div class="sec-title" style="margin-top:4px;">Important Note on K<sub>H</sub></div>
+
+  <div class="info-card">
+    <div class="ic-title">📌 What is K<sub>H</sub>?</div>
+    <p>
+      K<sub>H</sub> is the <strong>Henry's Law Constant</strong>. It depends on:
+      <br/>• The <strong>nature of the gas</strong> (CO₂, O₂, N₂, etc.)
+      <br/>• The <strong>temperature</strong> of the solution
+      <br/><br/>
+      A <strong>higher K<sub>H</sub></strong> means more soluble gas at that pressure.
+      <br/><br/>
+      When P = 1 bar → S = K<sub>H</sub> × 1 = K<sub>H</sub>
+      <br/>So <strong>K<sub>H</sub> is the solubility of the gas when pressure = 1 bar.</strong>
+    </p>
+  </div>
+
+  <!-- Applications -->
+  <div class="sec-title" style="margin-top:4px;">Real Life Applications</div>
+  <div class="app-grid">
+    <div class="app-card">
+      <div class="app-icon">🥤</div>
+      <div class="app-title">Carbonated Drinks</div>
+      <div class="app-desc">CO₂ sealed under high pressure. Opens → pressure drops → bubbles!</div>
+    </div>
+    <div class="app-card">
+      <div class="app-icon">🤿</div>
+      <div class="app-title">Deep Sea Diving</div>
+      <div class="app-desc">High water pressure → N₂ dissolves in blood. Fast rise causes "bends"</div>
+    </div>
+    <div class="app-card">
+      <div class="app-icon">🐟</div>
+      <div class="app-title">Fish in Water</div>
+      <div class="app-desc">Fish breathe O₂ dissolved in water. More O₂ pressure = more dissolved O₂</div>
+    </div>
+    <div class="app-card">
+      <div class="app-icon">🏔️</div>
+      <div class="app-title">High Altitude</div>
+      <div class="app-desc">Low O₂ pressure at mountains → less O₂ in blood → breathlessness</div>
+    </div>
+  </div>
+
+  <!-- Exceptions -->
+  <div class="sec-title" style="margin-top:4px;">Exceptions to Henry's Law</div>
+  <div class="exc-box">
+    <strong>⚠️ Gases that do NOT obey Henry's Law:</strong>
+    NH₃ (Ammonia) and CO₂ (Carbon dioxide) — because these gases <strong>react with water</strong> chemically. Since they form new compounds (NH₄OH and H₂CO₃), their actual solubility is much higher than what Henry's Law would predict.
+  </div>
+
+  <div style="background:#fef9e7; border:2px solid var(--gold); border-radius:12px; padding:14px; font-size:13px; line-height:1.6; color:#333; margin-bottom:6px;">
+    <strong>📝 Board Exam Tip:</strong> "State and explain Henry's Law" is asked almost every year — 3 marks. Always write: Statement → Formula with meaning of each symbol → One real-life application → Exceptions.
+  </div>
+
+</div>
+</div>
+
+<!-- ═══════════ TAB 2: SIMULATE ═══════════ -->
+<div id="tab-simulate" class="tab-content">
+<div class="section">
+
+  <div class="sec-title">Adjust Pressure & See Solubility Change</div>
+
+  <div class="slider-card">
+    <div class="sl-header">
+      <div class="sl-label">P — Pressure of Gas (bar)</div>
+      <div class="sl-val" id="val-P">1.0 bar</div>
+    </div>
+    <input type="range" class="sl-p" id="sl-P" min="0" max="100" value="10" oninput="updateSim()"/>
+    <div class="sl-range-labels"><span>0 bar</span><span>5 bar</span><span>10 bar</span></div>
+  </div>
+
+  <div class="slider-card">
+    <div class="sl-header">
+      <div class="sl-label">K<sub>H</sub> — Henry's Constant (mol L⁻¹ bar⁻¹)</div>
+      <div class="sl-val" id="val-KH">0.030</div>
+    </div>
+    <input type="range" class="sl-kh" id="sl-KH" min="1" max="100" value="30" oninput="updateSim()"/>
+    <div class="sl-range-labels">
+      <span>0.001 (N₂)</span>
+      <span>0.020 (O₂)</span>
+      <span>0.100 (CO₂)</span>
+    </div>
+  </div>
+
+  <!-- Gas presets -->
+  <div style="display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap;">
+    <div style="font-size:12px; font-weight:700; color:var(--navy); align-self:center;">Gas Preset:</div>
+    <button class="preset-btn" onclick="setPreset(0.0014,10,'N₂ (Nitrogen)')">N₂</button>
+    <button class="preset-btn" onclick="setPreset(0.0013,10,'O₂ (Oxygen)')">O₂</button>
+    <button class="preset-btn" onclick="setPreset(0.034,10,'CO₂ (Soda!)')">CO₂ 🥤</button>
+    <button class="preset-btn" onclick="setPreset(0.059,5,'CH₄ (Methane)')">CH₄</button>
+  </div>
+  <style>
+  .preset-btn {
+    padding: 8px 14px;
+    background: var(--navy);
+    color: var(--gold);
+    border: none;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .preset-btn:active { opacity: 0.8; }
+  </style>
+
+  <!-- Bottle Scene -->
+  <div class="bottle-scene">
+    <div class="scene-title">Live Simulation — Gas Dissolving in Liquid</div>
+    <div class="bottles-row">
+      <!-- Low pressure bottle -->
+      <div class="bottle-wrap">
+        <div class="gas-cloud" id="cloud-low" style="background:rgba(26,111,168,0.3); color:#1a6fa8;">
+          <span id="cloud-low-txt">Low gas</span>
+        </div>
+        <svg class="bottle-svg" viewBox="0 0 70 130">
+          <!-- bottle body -->
+          <rect x="10" y="30" width="50" height="85" rx="8" fill="#e8f4fc" stroke="#1a6fa8" stroke-width="2.5"/>
+          <!-- liquid fill -->
+          <clipPath id="cl1"><rect x="10" y="30" width="50" height="85" rx="8"/></clipPath>
+          <rect id="liq-low" x="10" y="80" width="50" height="35" fill="#7fb3d3" clip-path="url(#cl1)" style="transition:y 0.5s, height 0.5s;"/>
+          <!-- bubbles in low -->
+          <circle id="b1a" cx="25" cy="95" r="3" fill="white" opacity="0.5"/>
+          <circle id="b1b" cx="45" cy="85" r="2" fill="white" opacity="0.5"/>
+          <!-- cap -->
+          <rect x="22" y="20" width="26" height="12" rx="4" fill="#1a6fa8"/>
+          <!-- pressure arrow down -->
+          <text id="arrow-low" x="35" y="16" text-anchor="middle" font-size="10" fill="#1a6fa8" font-weight="bold">↓</text>
+        </svg>
+        <div style="font-size:11px; font-weight:700; color:var(--blue); margin-top:4px;">Low Pressure</div>
+        <div style="font-size:10px; color:#888;">Less dissolved</div>
+      </div>
+
+      <!-- Right arrow -->
+      <div style="font-size:28px; color:var(--gold); font-weight:900; padding-bottom:40px;">⟶</div>
+
+      <!-- Current bottle (dynamic) -->
+      <div class="bottle-wrap">
+        <div class="gas-cloud" id="cloud-cur" style="background:rgba(26,111,168,0.5); color:white; padding:4px 8px;">
+          <span id="cloud-cur-txt">...</span>
+        </div>
+        <svg class="bottle-svg" viewBox="0 0 70 130" id="bottle-cur">
+          <rect x="10" y="30" width="50" height="85" rx="8" fill="#e8f4fc" stroke="#1a6fa8" stroke-width="2.5"/>
+          <clipPath id="cl2"><rect x="10" y="30" width="50" height="85" rx="8"/></clipPath>
+          <rect id="liq-cur" x="10" y="80" width="50" height="35" fill="#1a6fa8" clip-path="url(#cl2)" style="transition:y 0.4s, height 0.4s, fill 0.4s;"/>
+          <g id="bubbles-cur"></g>
+          <rect x="22" y="20" width="26" height="12" rx="4" fill="#0a1628"/>
+          <text id="plabel-cur" x="35" y="16" text-anchor="middle" font-size="9" fill="var(--gold)" font-weight="bold">P</text>
+        </svg>
+        <div style="font-size:11px; font-weight:700; color:var(--navy); margin-top:4px;" id="cur-p-label">Your Pressure</div>
+        <div style="font-size:10px; color:#888;" id="cur-s-label">S = ?</div>
+      </div>
+
+      <!-- Right arrow -->
+      <div style="font-size:28px; color:var(--gold); font-weight:900; padding-bottom:40px;">⟶</div>
+
+      <!-- High pressure bottle -->
+      <div class="bottle-wrap">
+        <div class="gas-cloud" id="cloud-high" style="background:rgba(26,111,168,0.85); color:white; padding:4px;">
+          <span id="cloud-high-txt">Max gas</span>
+        </div>
+        <svg class="bottle-svg" viewBox="0 0 70 130">
+          <rect x="10" y="30" width="50" height="85" rx="8" fill="#e8f4fc" stroke="#1a6fa8" stroke-width="2.5"/>
+          <clipPath id="cl3"><rect x="10" y="30" width="50" height="85" rx="8"/></clipPath>
+          <rect x="10" y="30" width="50" height="85" fill="#1a6fa8" clip-path="url(#cl3)"/>
+          <circle cx="22" cy="50" r="4" fill="white" opacity="0.4"/>
+          <circle cx="48" cy="65" r="3" fill="white" opacity="0.4"/>
+          <circle cx="30" cy="80" r="5" fill="white" opacity="0.3"/>
+          <circle cx="50" cy="45" r="3" fill="white" opacity="0.5"/>
+          <circle cx="20" cy="90" r="4" fill="white" opacity="0.4"/>
+          <rect x="22" y="20" width="26" height="12" rx="4" fill="#0a1628"/>
+          <text x="35" y="16" text-anchor="middle" font-size="10" fill="var(--gold)" font-weight="bold">↑↑↑</text>
+        </svg>
+        <div style="font-size:11px; font-weight:700; color:var(--blue); margin-top:4px;">High Pressure</div>
+        <div style="font-size:10px; color:#888;">Fully dissolved</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Result cards -->
+  <div class="result-row">
+    <div class="r-card">
+      <div class="r-sym blue">P</div>
+      <div class="r-lbl">Pressure of Gas</div>
+      <div class="r-val blue" id="r-P">1.00</div>
+      <div class="r-unit">bar</div>
+    </div>
+    <div class="r-card">
+      <div class="r-sym green">K<sub>H</sub></div>
+      <div class="r-lbl">Henry's Constant</div>
+      <div class="r-val green" id="r-KH">0.030</div>
+      <div class="r-unit">mol L⁻¹ bar⁻¹</div>
+    </div>
+    <div class="r-card" style="border-top:3px solid var(--gold);">
+      <div class="r-sym gold">S</div>
+      <div class="r-lbl">Solubility</div>
+      <div class="r-val gold" id="r-S">0.030</div>
+      <div class="r-unit">mol L⁻¹</div>
+    </div>
+  </div>
+
+  <!-- Working -->
+  <div class="working-box" id="working-box">
+    <span class="gold" style="font-weight:800;">Step-by-step:</span><br/>
+    <span id="wk-text"></span>
+  </div>
+
+  <!-- Gas name -->
+  <div id="gas-tag" style="text-align:center; background:var(--navy); color:var(--gold); border-radius:10px; padding:10px; font-weight:800; font-size:14px; margin-bottom:4px;">
+    Simulating a custom gas
+  </div>
+
+</div>
+</div>
+
+<!-- ═══════════ TAB 3: GRAPH ═══════════ -->
+<div id="tab-graph" class="tab-content">
+<div class="section">
+
+  <div class="sec-title">S vs P Graph (Henry's Law)</div>
+
+  <div class="graph-wrap">
+    <canvas id="graph" width="600" height="440"></canvas>
+    <div class="legend-row">
+      <div class="leg-item"><div class="leg-dot" style="background:var(--blue);"></div>S = K<sub>H</sub> × P (Henry's Law line)</div>
+      <div class="leg-item"><div class="leg-dot" style="background:var(--red); border-radius:2px;"></div>Your current point</div>
+    </div>
+  </div>
+
+  <div class="info-card">
+    <div class="ic-title">📐 What this graph shows</div>
+    <p>
+      • The graph is a <strong>straight line</strong> passing through the origin (0,0).<br/>
+      • This shows <strong>direct proportionality</strong> between S and P.<br/>
+      • The <strong>slope of the line = K<sub>H</sub></strong> (steeper line = more soluble gas).<br/>
+      • The <span style="color:var(--red); font-weight:700;">red dot</span> is your current setting from the Simulate tab.<br/>
+      • Change sliders in Simulate tab and come back to see the dot move!
+    </p>
+  </div>
+
+  <div class="info-card">
+    <div class="ic-title">📊 Compare Different Gases</div>
+    <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:6px;">
+      <button class="preset-btn" onclick="setPreset(0.0014,10,'N₂'); drawGraph();">N₂ line</button>
+      <button class="preset-btn" onclick="setPreset(0.0013,10,'O₂'); drawGraph();">O₂ line</button>
+      <button class="preset-btn" onclick="setPreset(0.034,10,'CO₂'); drawGraph();">CO₂ line</button>
+    </div>
+    <p style="margin-top:10px; font-size:12px; color:#666;">Tap a gas to see how the slope (K<sub>H</sub>) changes the line!</p>
+  </div>
+
+</div>
+</div>
+
+<!-- ═══════════ TAB 4: SYMBOLS ═══════════ -->
+<div id="tab-symbols" class="tab-content">
+<div class="section">
+
+  <div class="sec-title">Every Symbol Explained</div>
+
+  <div class="sym-table">
+    <div class="sym-row">
+      <div class="sym-badge">S</div>
+      <div class="sym-info">
+        <strong>Solubility of the Gas</strong>
+        <span>How much gas dissolves in 1 litre of liquid. Unit: mol L⁻¹ (moles per litre). More dissolved gas = higher S.</span>
+      </div>
+    </div>
+    <div class="sym-row">
+      <div class="sym-badge">P</div>
+      <div class="sym-info">
+        <strong>Pressure of Gas over Solution</strong>
+        <span>The pressure that the gas exerts on top of the liquid surface. Unit: bar. Higher P pushes more gas into the liquid.</span>
+      </div>
+    </div>
+    <div class="sym-row">
+      <div class="sym-badge">K<sub>H</sub></div>
+      <div class="sym-info">
+        <strong>Henry's Law Constant</strong>
+        <span>The proportionality constant for a specific gas at a specific temperature. Unit: mol L⁻¹ bar⁻¹. It is numerically equal to the solubility when P = 1 bar. Different gas → different K<sub>H</sub>.</span>
+      </div>
+    </div>
+    <div class="sym-row">
+      <div class="sym-badge">∝</div>
+      <div class="sym-info">
+        <strong>"Is directly proportional to"</strong>
+        <span>S ∝ P means: if pressure doubles, solubility also doubles. They increase and decrease together.</span>
+      </div>
+    </div>
+    <div class="sym-row">
+      <div class="sym-badge">mol L⁻¹</div>
+      <div class="sym-info">
+        <strong>Moles per Litre (unit of S)</strong>
+        <span>This is the unit of solubility — how many moles of gas are dissolved in 1 litre of solution.</span>
+      </div>
+    </div>
+    <div class="sym-row">
+      <div class="sym-badge">bar</div>
+      <div class="sym-info">
+        <strong>Bar (unit of Pressure)</strong>
+        <span>Unit of gas pressure. 1 bar ≈ 1 atmosphere. Normal atmospheric pressure ≈ 1 bar.</span>
+      </div>
+    </div>
+  </div>
+
+  <div style="background:#fef9e7; border:2px solid var(--gold); border-radius:14px; padding:14px; font-size:13px; line-height:1.7; color:#333; margin-bottom:6px;">
+    <strong>🧠 Memory Trick:</strong><br/>
+    Think of Henry's Law like a <strong>sponge under water</strong>. The more you press (more pressure), the more water (gas) it absorbs (dissolves). Release the press (lower pressure) — the water comes out (gas escapes as bubbles). <strong>Squeeze more = absorb more. That's Henry's Law!</strong>
+  </div>
+
+  <div style="background:linear-gradient(135deg,#0d2240,#1a4070); border-radius:14px; padding:14px; color:white; font-size:13px; line-height:1.7; margin-bottom:6px;">
+    <strong style="color:var(--gold);">⚗️ Important Formula Summary:</strong><br/>
+    S = K<sub style="font-size:11px;">H</sub> × P<br/>
+    K<sub style="font-size:11px;">H</sub> = S ÷ P<br/>
+    P = S ÷ K<sub style="font-size:11px;">H</sub><br/><br/>
+    <span style="color:rgba(255,255,255,0.7);">Rearrange based on what is asked in the numerical!</span>
+  </div>
+
+</div>
+</div>
+
+<!-- ═══════════ TAB 5: QUIZ ═══════════ -->
+<div id="tab-quiz" class="tab-content">
+<div class="section">
+
+  <div class="sec-title">Test Yourself — Henry's Law</div>
+  <div id="quiz-area"></div>
+  <div class="score-box" id="score-box">
+    <div style="font-size:32px;">🎉</div>
+    <div class="score-big" id="score-num">5/6</div>
+    <div class="score-msg" id="score-msg"></div>
+    <button class="btn-restart" onclick="startQuiz()">Try Again</button>
+  </div>
+
+</div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <strong>© Jitesh Salve Chemistry Simulations</strong>
+  Maharashtra HSC Board Chemistry | Unauthorised copying prohibited
+</div>
+
+<script>
+/* ═══════ STATE ═══════ */
+let curP   = 1.0;
+let curKH  = 0.030;
+let curGas = 'Custom Gas';
+
+/* ═══════ TABS ═══════ */
+function showTab(id, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+  if (id === 'graph') drawGraph();
+}
+
+/* ═══════ PRESETS ═══════ */
+function setPreset(kh, pVal, name) {
+  curGas = name;
+  // map kh to slider 1-100 (kh range 0.001 to 0.1)
+  const khSliderVal = Math.round((kh / 0.001));
+  document.getElementById('sl-KH').value = Math.min(100, Math.max(1, khSliderVal));
+  document.getElementById('sl-P').value  = Math.round(pVal / 0.1);
+  updateSim();
+}
+
+/* ═══════ SIMULATION UPDATE ═══════ */
+function updateSim() {
+  const pSlider  = +document.getElementById('sl-P').value;
+  const khSlider = +document.getElementById('sl-KH').value;
+
+  curP  = pSlider * 0.1;   // 0 to 10 bar
+  curKH = khSlider * 0.001; // 0.001 to 0.100
+
+  const S = curKH * curP;
+
+  // Update value labels
+  document.getElementById('val-P').textContent  = curP.toFixed(1) + ' bar';
+  document.getElementById('val-KH').textContent = curKH.toFixed(3);
+  document.getElementById('r-P').textContent    = curP.toFixed(2);
+  document.getElementById('r-KH').textContent   = curKH.toFixed(3);
+  document.getElementById('r-S').textContent    = S.toFixed(4);
+
+  // Working box
+  document.getElementById('wk-text').innerHTML =
+    `P = <strong style="color:var(--gold)">${curP.toFixed(2)} bar</strong> &nbsp;|&nbsp; K<sub>H</sub> = <strong style="color:#82c8a0">${curKH.toFixed(3)} mol L⁻¹ bar⁻¹</strong><br/>
+     S = K<sub>H</sub> × P<br/>
+     S = ${curKH.toFixed(3)} × ${curP.toFixed(2)}<br/>
+     <strong style="color:var(--gold); font-size:15px;">S = ${S.toFixed(4)} mol L⁻¹</strong>`;
+
+  // Gas tag
+  document.getElementById('gas-tag').textContent = 'Simulating: ' + curGas;
+
+  // Bottle animation
+  const maxS = 0.1 * 10; // max possible S
+  const fillFrac = Math.min(S / maxS, 1);
+  const liquidY  = 30 + 85 * (1 - 0.2 - fillFrac * 0.7);
+  const liquidH  = 85 * (0.2 + fillFrac * 0.7);
+  const liqEl    = document.getElementById('liq-cur');
+  if (liqEl) {
+    liqEl.setAttribute('y', liquidY.toFixed(1));
+    liqEl.setAttribute('height', liquidH.toFixed(1));
+    // Color: light blue (low) to deep navy (high)
+    const r = Math.round(26  + (10  - 26)  * fillFrac);
+    const g = Math.round(111 + (22  - 111) * fillFrac);
+    const b2= Math.round(168 + (40  - 168) * fillFrac);
+    liqEl.setAttribute('fill', `rgb(${r},${g},${b2})`);
+  }
+
+  // Bubble count
+  const bubblesEl = document.getElementById('bubbles-cur');
+  if (bubblesEl) {
+    bubblesEl.innerHTML = '';
+    const n = Math.round(fillFrac * 8);
+    for (let i = 0; i < n; i++) {
+      const cx = 15 + Math.random() * 40;
+      const cy = liquidY + Math.random() * liquidH;
+      const r2 = 2 + Math.random() * 3;
+      bubblesEl.innerHTML += `<circle cx="${cx.toFixed(0)}" cy="${cy.toFixed(0)}" r="${r2.toFixed(1)}" fill="white" opacity="0.45"/>`;
+    }
+  }
+
+  // Cloud label
+  document.getElementById('cloud-cur-txt').textContent = `P = ${curP.toFixed(1)} bar`;
+  document.getElementById('cloud-cur').style.background = `rgba(26,111,168,${0.2 + fillFrac * 0.7})`;
+  document.getElementById('cloud-cur').style.color = fillFrac > 0.4 ? 'white' : '#1a6fa8';
+
+  document.getElementById('cur-p-label').textContent = `P = ${curP.toFixed(1)} bar`;
+  document.getElementById('cur-s-label').textContent = `S = ${S.toFixed(4)} mol/L`;
+
+  if (document.getElementById('tab-graph').classList.contains('active')) drawGraph();
+}
+
+/* ═══════ GRAPH ═══════ */
+function drawGraph() {
+  const canvas = document.getElementById('graph');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const pad = { l: 70, r: 30, t: 40, b: 60 };
+  const gW  = W - pad.l - pad.r;
+  const gH  = H - pad.t - pad.b;
+
+  const maxP = 10;
+  const maxS = curKH * maxP * 1.1;
+
+  ctx.clearRect(0, 0, W, H);
+
+  // Background
+  const bg = ctx.createLinearGradient(0, 0, 0, H);
+  bg.addColorStop(0, '#f8fafc');
+  bg.addColorStop(1, '#eef2f7');
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, W, H);
+
+  const toX = p => pad.l + (p / maxP) * gW;
+  const toY = s => pad.t + gH - (s / maxS) * gH;
+
+  // Grid
+  ctx.strokeStyle = '#dde3ed'; ctx.lineWidth = 1;
+  for (let i = 0; i <= 5; i++) {
+    const y = pad.t + (gH / 5) * i;
+    ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(pad.l + gW, y); ctx.stroke();
+    const val = maxS * (5 - i) / 5;
+    ctx.fillStyle = '#888'; ctx.font = '11px Arial'; ctx.textAlign = 'right';
+    ctx.fillText(val.toFixed(3), pad.l - 6, y + 4);
+  }
+  for (let i = 0; i <= 5; i++) {
+    const x = pad.l + (gW / 5) * i;
+    ctx.beginPath(); ctx.moveTo(x, pad.t); ctx.lineTo(x, pad.t + gH); ctx.stroke();
+    ctx.fillStyle = '#888'; ctx.font = '11px Arial'; ctx.textAlign = 'center';
+    ctx.fillText((maxP * i / 5).toFixed(1), x, pad.t + gH + 18);
+  }
+
+  // Axes
+  ctx.strokeStyle = '#333'; ctx.lineWidth = 2.5;
+  ctx.beginPath(); ctx.moveTo(pad.l, pad.t); ctx.lineTo(pad.l, pad.t + gH); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(pad.l, pad.t + gH); ctx.lineTo(pad.l + gW, pad.t + gH); ctx.stroke();
+
+  // Axis labels
+  ctx.fillStyle = '#333'; ctx.font = 'bold 12px Arial'; ctx.textAlign = 'center';
+  ctx.fillText('Pressure P (bar) →', pad.l + gW / 2, H - 10);
+  ctx.save(); ctx.translate(16, pad.t + gH / 2); ctx.rotate(-Math.PI / 2);
+  ctx.fillText('Solubility S (mol/L) →', 0, 0); ctx.restore();
+
+  // Henry's Law line
+  const lineGrad = ctx.createLinearGradient(toX(0), toY(0), toX(maxP), toY(curKH * maxP));
+  lineGrad.addColorStop(0, '#1a6fa8');
+  lineGrad.addColorStop(1, '#0a1628');
+  ctx.strokeStyle = lineGrad;
+  ctx.lineWidth = 3.5;
+  ctx.beginPath();
+  ctx.moveTo(toX(0), toY(0));
+  ctx.lineTo(toX(maxP), toY(curKH * maxP));
+  ctx.stroke();
+
+  // Line label
+  ctx.fillStyle = '#1a6fa8'; ctx.font = 'bold 12px Arial'; ctx.textAlign = 'left';
+  ctx.fillText('S = KH x P', toX(maxP * 0.4) + 6, toY(curKH * maxP * 0.4) - 10);
+
+  // Current point (red dot)
+  const dotX = toX(curP);
+  const dotY = toY(curKH * curP);
+  // Glow
+  ctx.beginPath();
+  ctx.arc(dotX, dotY, 16, 0, 2 * Math.PI);
+  ctx.fillStyle = 'rgba(192,57,43,0.15)';
+  ctx.fill();
+  // Dashed lines to axes
+  ctx.setLineDash([5, 4]);
+  ctx.strokeStyle = 'rgba(192,57,43,0.5)'; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(dotX, dotY); ctx.lineTo(dotX, pad.t + gH); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(dotX, dotY); ctx.lineTo(pad.l, dotY); ctx.stroke();
+  ctx.setLineDash([]);
+  // Dot
+  ctx.beginPath();
+  ctx.arc(dotX, dotY, 9, 0, 2 * Math.PI);
+  ctx.fillStyle = '#c0392b'; ctx.fill();
+  ctx.strokeStyle = 'white'; ctx.lineWidth = 2.5; ctx.stroke();
+  // Label
+  const S = curKH * curP;
+  ctx.fillStyle = '#c0392b'; ctx.font = 'bold 11px Arial'; ctx.textAlign = 'center';
+  ctx.fillText(`(${curP.toFixed(1)}, ${S.toFixed(3)})`, dotX, dotY - 16);
+
+  // Watermark
+  ctx.fillStyle = 'rgba(10,22,40,0.07)';
+  ctx.font = 'bold 18px Arial'; ctx.textAlign = 'center';
+  ctx.fillText('© Jitesh Salve', W / 2, H / 2 + 10);
+}
+
+/* ═══════ QUIZ ═══════ */
+const questions = [
+  {
+    q: "Henry's Law states that the solubility of a gas in a liquid is:",
+    opts: [
+      "Inversely proportional to pressure",
+      "Directly proportional to pressure",
+      "Independent of pressure",
+      "Equal to the pressure"
+    ],
+    ans: 1,
+    exp: "Correct! Henry's Law: S ∝ P — solubility increases as pressure increases."
+  },
+  {
+    q: "The formula for Henry's Law is:",
+    opts: ["S = KH + P", "S = KH / P", "S = KH × P", "S = KH − P"],
+    ans: 2,
+    exp: "Correct! S = KH × P. Solubility equals Henry's constant multiplied by pressure."
+  },
+  {
+    q: "The unit of Henry's Law constant KH is:",
+    opts: ["mol L⁻¹", "bar", "mol L⁻¹ bar⁻¹", "L mol⁻¹"],
+    ans: 2,
+    exp: "Correct! Unit of KH = mol L⁻¹ bar⁻¹ (since S = KH × P, so KH = S/P = mol L⁻¹ / bar)."
+  },
+  {
+    q: "Which gases are EXCEPTIONS to Henry's Law?",
+    opts: [
+      "O₂ and N₂",
+      "CO₂ and NH₃",
+      "H₂ and He",
+      "CH₄ and CO"
+    ],
+    ans: 1,
+    exp: "Correct! CO₂ and NH₃ react with water and form new compounds, so they show higher solubility than Henry's Law predicts."
+  },
+  {
+    q: "If KH = 0.034 mol L⁻¹ bar⁻¹ and P = 2 bar, what is the solubility S?",
+    opts: [
+      "0.017 mol L⁻¹",
+      "0.034 mol L⁻¹",
+      "0.068 mol L⁻¹",
+      "0.136 mol L⁻¹"
+    ],
+    ans: 2,
+    exp: "Correct! S = KH × P = 0.034 × 2 = 0.068 mol L⁻¹"
+  },
+  {
+    q: "When you open a cold drink bottle, CO₂ bubbles escape because:",
+    opts: [
+      "Temperature increases",
+      "Pressure decreases, so solubility decreases",
+      "CO₂ reacts with air",
+      "KH increases on opening"
+    ],
+    ans: 1,
+    exp: "Correct! Opening the bottle drops the pressure. By Henry's Law, lower pressure = lower solubility → dissolved CO₂ escapes as bubbles!"
+  },
+  {
+    q: "The slope of the S vs P graph in Henry's Law equals:",
+    opts: ["S", "P", "KH", "1/KH"],
+    ans: 2,
+    exp: "Correct! S = KH × P is y = mx form, where slope m = KH. Steeper slope = higher KH = more soluble gas."
+  }
+];
+
+let qIndex = 0, score = 0, answered = false;
+
+function startQuiz() {
+  qIndex = 0; score = 0; answered = false;
+  document.getElementById('score-box').style.display = 'none';
+  renderQ();
+}
+
+function renderQ() {
+  const area = document.getElementById('quiz-area');
+  if (qIndex >= questions.length) {
+    area.innerHTML = '';
+    const sb = document.getElementById('score-box');
+    sb.style.display = 'block';
+    document.getElementById('score-num').textContent = score + '/' + questions.length;
+    const pct = Math.round(score / questions.length * 100);
+    document.getElementById('score-msg').textContent =
+      pct === 100 ? '🏆 Perfect! Excellent work!' :
+      pct >= 70 ? '👍 Great job! Keep it up!' :
+      pct >= 50 ? '📚 Good try! Review and retry.' :
+      '💪 Keep studying — you can do it!';
+    return;
+  }
+  answered = false;
+  const q = questions[qIndex];
+  area.innerHTML = `
+    <div class="quiz-card">
+      <div class="q-num">Question ${qIndex + 1} of ${questions.length}</div>
+      <div class="q-text">${q.q}</div>
+      <div class="q-options">
+        ${q.opts.map((o, i) => `<button class="q-opt" onclick="checkQ(${i})">${String.fromCharCode(65 + i)}. ${o}</button>`).join('')}
+      </div>
+      <div class="q-feedback" id="qfb"></div>
+      <button class="btn-next" id="btn-nxt" onclick="nextQ()">Next Question →</button>
+    </div>`;
+}
+
+function checkQ(idx) {
+  if (answered) return;
+  answered = true;
+  const q = questions[qIndex];
+  const opts = document.querySelectorAll('.q-opt');
+  opts[q.ans].classList.add('correct');
+  if (idx !== q.ans) opts[idx].classList.add('wrong');
+  else score++;
+  const fb = document.getElementById('qfb');
+  fb.textContent = (idx === q.ans ? '✅ ' : '❌ ') + q.exp;
+  fb.className = 'q-feedback show ' + (idx === q.ans ? 'ok' : 'no');
+  document.getElementById('btn-nxt').style.display = 'block';
+}
+
+function nextQ() { qIndex++; renderQ(); }
+
+/* ═══════ INIT ═══════ */
+updateSim();
+startQuiz();
+</script>
+</body>
+</html>

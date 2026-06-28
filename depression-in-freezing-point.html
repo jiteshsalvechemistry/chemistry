@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>Depression in Freezing Point — Jitesh Salve</title>
+<style>
+:root {
+  --navy:  #0a1628;
+  --gold:  #c8a84b;
+  --red:   #c0392b;
+  --light: #f4f6fb;
+  --ice:   #b3e5fc;
+  --icedark: #0288d1;
+  --crystal: #e1f5fe;
+  --green: #1a7a4a;
+  --purple:#6a1b9a;
+  --card:  #ffffff;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--light);color:var(--navy);overflow-x:hidden;}
+
+/* ── WATERMARK ── */
+.wm-bar{
+  background:var(--navy);color:var(--gold);text-align:center;
+  padding:7px 10px;font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;
+}
+
+/* ── HERO ── */
+.hero{
+  background:linear-gradient(150deg,#050e1f 0%,#0a1628 45%,#0d2240 80%,#112d52 100%);
+  padding:24px 16px 22px;text-align:center;position:relative;overflow:hidden;
+}
+.hero-snowflakes{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;}
+.sf{position:absolute;color:rgba(200,168,75,0.15);font-size:20px;animation:sfFall linear infinite;}
+@keyframes sfFall{0%{transform:translateY(-30px) rotate(0deg);opacity:0;}20%{opacity:1;}80%{opacity:0.6;}100%{transform:translateY(200px) rotate(180deg);opacity:0;}}
+.hero-chip{
+  display:inline-block;background:var(--gold);color:var(--navy);
+  font-size:10px;font-weight:900;letter-spacing:2px;padding:4px 14px;
+  border-radius:20px;margin-bottom:12px;text-transform:uppercase;
+}
+.hero h1{font-size:27px;font-weight:900;color:white;letter-spacing:1px;line-height:1.1;}
+.hero h1 span{color:var(--gold);}
+.hero-sub{color:rgba(255,255,255,0.55);font-size:12px;margin-top:5px;}
+.hero-formula{
+  display:inline-block;background:rgba(200,168,75,0.12);
+  border:1.5px solid rgba(200,168,75,0.4);color:var(--gold);
+  font-size:16px;font-weight:800;padding:8px 22px;border-radius:10px;
+  margin-top:12px;letter-spacing:1.5px;
+}
+.hero-credit{color:rgba(200,168,75,0.7);font-size:11px;font-style:italic;margin-top:8px;}
+
+/* ── TABS ── */
+.tab-bar{
+  display:flex;background:white;border-bottom:3px solid var(--gold);
+  overflow-x:auto;position:sticky;top:0;z-index:100;
+  box-shadow:0 2px 8px rgba(0,0,0,0.1);
+}
+.tab-bar::-webkit-scrollbar{display:none;}
+.tab-btn{
+  flex:none;padding:13px 15px;font-size:12px;font-weight:800;color:#aaa;
+  background:none;border:none;cursor:pointer;white-space:nowrap;font-family:inherit;
+  border-bottom:3px solid transparent;margin-bottom:-3px;letter-spacing:0.3px;transition:color 0.2s;
+}
+.tab-btn.active{color:var(--navy);border-bottom-color:var(--gold);}
+.tab-content{display:none;}
+.tab-content.active{display:block;}
+.section{padding:16px 14px;}
+.sec-title{
+  font-size:12px;font-weight:900;color:var(--navy);letter-spacing:1.5px;
+  text-transform:uppercase;border-left:4px solid var(--gold);
+  padding-left:10px;margin-bottom:14px;
+}
+
+/* ── CONCEPT CARDS ── */
+.fbox{
+  background:var(--navy);border-radius:14px;padding:16px;
+  margin-bottom:12px;text-align:center;
+}
+.fbox .main{font-size:18px;font-weight:800;color:var(--gold);letter-spacing:1.5px;margin-bottom:5px;line-height:1.5;}
+.fbox .note{font-size:12px;color:rgba(255,255,255,0.65);line-height:1.65;}
+.fbox-blue{background:linear-gradient(135deg,#0d2240,#1a4070);}
+.fbox-ice{background:linear-gradient(135deg,#01579b,#0288d1);}
+
+.info-card{
+  background:white;border-radius:14px;padding:14px;
+  margin-bottom:12px;box-shadow:0 2px 12px rgba(0,0,0,0.07);
+}
+.info-card .ic-title{font-size:13px;font-weight:800;color:var(--navy);margin-bottom:8px;}
+.info-card p{font-size:13px;color:#444;line-height:1.7;}
+
+.concept-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+.mini-card{
+  background:white;border-radius:12px;padding:12px 10px;
+  box-shadow:0 2px 10px rgba(0,0,0,0.07);text-align:center;
+}
+.mini-card .mc-icon{font-size:24px;margin-bottom:5px;}
+.mini-card .mc-title{font-size:11px;font-weight:800;color:var(--navy);margin-bottom:3px;}
+.mini-card .mc-val{font-size:13px;font-weight:700;color:var(--icedark);}
+
+.tip-box{
+  background:#f0f7ff;border:2px solid var(--icedark);border-radius:12px;
+  padding:13px;font-size:12.5px;line-height:1.65;color:#1a3a5c;margin-bottom:12px;
+}
+.tip-box strong{color:var(--navy);}
+
+/* ── SIMULATE TAB ── */
+.sim-wrap{
+  background:linear-gradient(180deg,#e8f4fb 0%,#d0eaf8 100%);
+  border-radius:16px;padding:16px 12px;margin-bottom:14px;
+  box-shadow:inset 0 2px 8px rgba(0,0,0,0.06);
+}
+
+/* Thermometer */
+.thermo-scene{
+  display:flex;align-items:flex-end;justify-content:center;gap:20px;
+  margin-bottom:16px;
+}
+.thermo-wrap{display:flex;flex-direction:column;align-items:center;gap:6px;}
+.thermo-label{font-size:11px;font-weight:700;color:var(--navy);letter-spacing:0.5px;}
+.thermo-outer{
+  width:32px;height:180px;background:rgba(255,255,255,0.7);
+  border-radius:20px 20px 50% 50%;border:2.5px solid #90caf9;
+  position:relative;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.12);
+}
+.thermo-bulb{
+  position:absolute;bottom:-2px;left:50%;transform:translateX(-50%);
+  width:28px;height:28px;border-radius:50%;background:#ef5350;
+  box-shadow:0 0 10px rgba(239,83,80,0.6);z-index:2;
+}
+.thermo-fill{
+  position:absolute;bottom:14px;left:50%;transform:translateX(-50%);
+  width:12px;border-radius:6px 6px 0 0;
+  transition:height 0.8s cubic-bezier(0.4,0,0.2,1),background 0.8s;
+  z-index:1;
+}
+.thermo-scale{
+  position:absolute;right:-28px;top:0;height:100%;display:flex;
+  flex-direction:column;justify-content:space-between;
+  font-size:9px;font-weight:700;color:#555;
+}
+.thermo-readout{
+  font-size:20px;font-weight:900;color:var(--navy);
+  text-align:center;min-width:80px;
+}
+.thermo-readout .tr-label{font-size:10px;font-weight:700;color:#666;display:block;margin-top:2px;}
+
+/* Beaker visual */
+.beaker-scene{
+  display:flex;align-items:flex-end;justify-content:center;gap:16px;
+  margin-bottom:10px;
+}
+.beaker-outer{
+  position:relative;
+  width:100px;height:150px;
+}
+.beaker-body{
+  position:absolute;bottom:0;left:50%;transform:translateX(-50%);
+  width:90px;height:130px;
+  border:3px solid rgba(30,60,100,0.4);
+  border-top:none;
+  border-radius:0 0 14px 14px;
+  overflow:hidden;
+  background:transparent;
+}
+.beaker-liquid{
+  position:absolute;bottom:0;left:0;width:100%;
+  transition:background 0.8s;
+  border-radius:0 0 11px 11px;
+}
+.beaker-top{
+  position:absolute;top:-6px;left:50%;transform:translateX(-50%);
+  width:96px;height:12px;border:3px solid rgba(30,60,100,0.4);
+  border-bottom:none;border-radius:8px 8px 0 0;background:transparent;
+}
+.beaker-label{
+  position:absolute;bottom:-22px;left:50%;transform:translateX(-50%);
+  font-size:10px;font-weight:800;color:var(--navy);white-space:nowrap;text-align:center;
+}
+.beaker-temp{
+  position:absolute;top:6px;left:50%;transform:translateX(-50%);
+  font-size:14px;font-weight:900;color:white;
+  text-shadow:0 1px 4px rgba(0,0,0,0.5);white-space:nowrap;
+}
+
+/* Crystals canvas */
+#crystalCanvas{
+  display:block;width:100%;height:auto;border-radius:12px;
+  margin-bottom:12px;box-shadow:0 2px 10px rgba(0,0,0,0.1);
+}
+
+/* Sliders */
+.slider-card{
+  background:white;border-radius:14px;padding:14px;
+  margin-bottom:10px;box-shadow:0 2px 10px rgba(0,0,0,0.07);
+}
+.sl-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.sl-label{font-size:13px;font-weight:800;color:var(--navy);}
+.sl-val{
+  font-size:14px;font-weight:900;color:var(--icedark);
+  min-width:60px;text-align:right;
+}
+input[type=range]{
+  width:100%;height:6px;border-radius:3px;
+  -webkit-appearance:none;appearance:none;
+  background:linear-gradient(to right,var(--icedark) 0%,var(--ice) 100%);
+  outline:none;cursor:pointer;margin-bottom:4px;
+}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:22px;height:22px;border-radius:50%;
+  background:var(--navy);border:3px solid var(--gold);cursor:pointer;
+  box-shadow:0 2px 6px rgba(0,0,0,0.2);
+}
+.kf-select-row{display:flex;gap:8px;margin-bottom:10px;}
+.kf-btn{
+  flex:1;padding:10px 4px;border:2.5px solid #ddd;border-radius:10px;
+  background:white;font-size:11px;font-weight:800;cursor:pointer;
+  font-family:inherit;text-align:center;transition:all 0.2s;line-height:1.4;color:var(--navy);
+}
+.kf-btn.active{border-color:var(--icedark);background:#e1f5fe;color:var(--icedark);}
+
+/* Calculation box */
+.calc-box{
+  background:var(--navy);border-radius:14px;padding:14px;
+  margin-bottom:12px;
+}
+.calc-title{
+  font-size:11px;font-weight:900;color:var(--gold);letter-spacing:1.5px;
+  text-transform:uppercase;margin-bottom:10px;
+}
+.calc-step{
+  display:flex;align-items:center;gap:8px;margin-bottom:7px;
+  font-size:13px;color:white;
+}
+.calc-step .cs-label{color:rgba(255,255,255,0.55);font-size:11px;min-width:90px;}
+.calc-step .cs-val{color:var(--gold);font-weight:800;font-size:14px;}
+.calc-final{
+  background:rgba(200,168,75,0.15);border:1.5px solid rgba(200,168,75,0.4);
+  border-radius:10px;padding:10px;margin-top:8px;text-align:center;
+}
+.calc-final .cf-label{font-size:11px;color:rgba(255,255,255,0.55);margin-bottom:3px;}
+.calc-final .cf-val{font-size:22px;font-weight:900;color:var(--gold);}
+
+/* Result chips */
+.result-chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+.r-chip{
+  flex:1;min-width:80px;background:white;border-radius:12px;padding:11px 8px;
+  text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+.r-chip .rc-label{font-size:10px;color:#777;margin-bottom:3px;font-weight:700;}
+.r-chip .rc-val{font-size:15px;font-weight:900;color:var(--navy);}
+.r-chip .rc-unit{font-size:10px;color:#aaa;}
+
+/* GRAPH TAB */
+#graphCanvas{width:100%;height:auto;display:block;border-radius:14px;box-shadow:0 2px 12px rgba(0,0,0,0.1);margin-bottom:10px;}
+.graph-legend{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:12px;}
+.leg-item{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:var(--navy);}
+.leg-dot{width:12px;height:12px;border-radius:50%;}
+.leg-line{width:20px;height:3px;border-radius:2px;}
+
+/* SYMBOLS TAB */
+.sym-table{
+  width:100%;border-collapse:collapse;font-size:12px;
+  background:white;border-radius:12px;overflow:hidden;
+  box-shadow:0 2px 10px rgba(0,0,0,0.07);margin-bottom:12px;
+}
+.sym-table th{background:var(--navy);color:var(--gold);padding:10px 8px;text-align:left;font-weight:800;font-size:11px;}
+.sym-table td{padding:10px 8px;border-bottom:1px solid #f0f2f5;vertical-align:top;line-height:1.55;}
+.sym-table td:first-child{font-weight:800;color:var(--navy);font-size:14px;text-align:center;}
+.sym-table tr:nth-child(even) td{background:#f8f9fa;}
+
+/* QUIZ TAB */
+.quiz-card{background:white;border-radius:14px;padding:16px;box-shadow:0 2px 10px rgba(0,0,0,0.08);margin-bottom:10px;}
+.q-num{font-size:10px;color:#aaa;font-weight:700;margin-bottom:5px;letter-spacing:1px;}
+.q-text{font-size:14px;font-weight:800;color:var(--navy);margin-bottom:14px;line-height:1.5;}
+.q-opts{display:flex;flex-direction:column;gap:8px;}
+.q-opt{
+  background:var(--light);border:2px solid #e0e4ea;border-radius:10px;
+  padding:12px 14px;font-size:13px;cursor:pointer;text-align:left;
+  font-family:inherit;font-weight:600;color:var(--navy);transition:all 0.15s;width:100%;
+}
+.q-opt.correct{background:#d5f5e3;border-color:#27ae60;color:#145a32;}
+.q-opt.wrong{background:#fadbd8;border-color:#e74c3c;color:#7b241c;}
+.q-fb{margin-top:10px;font-size:12px;font-weight:700;padding:9px 12px;border-radius:8px;display:none;line-height:1.5;}
+.q-fb.show{display:block;}
+.q-fb.ok{background:#d5f5e3;color:#145a32;}
+.q-fb.no{background:#fadbd8;color:#7b241c;}
+.btn-next{
+  width:100%;margin-top:12px;padding:13px;background:var(--navy);color:var(--gold);
+  border:none;border-radius:10px;font-size:14px;font-weight:800;cursor:pointer;
+  display:none;font-family:inherit;
+}
+.score-box{
+  text-align:center;background:white;border-radius:16px;padding:28px 20px;
+  box-shadow:0 4px 20px rgba(0,0,0,0.1);display:none;
+}
+.score-big{font-size:52px;font-weight:900;color:var(--navy);margin:8px 0;}
+.score-msg{font-size:13px;color:#555;margin-bottom:20px;line-height:1.6;}
+.btn-restart{
+  padding:13px 28px;background:var(--navy);color:var(--gold);
+  border:none;border-radius:12px;font-size:15px;font-weight:800;
+  cursor:pointer;font-family:inherit;
+}
+
+/* FOOTER */
+.footer{
+  background:var(--navy);color:var(--gold);text-align:center;
+  padding:16px 12px;font-size:10.5px;letter-spacing:1px;margin-top:10px;
+}
+.footer strong{display:block;font-size:13px;margin-bottom:4px;}
+</style>
+</head>
+<body>
+
+<!-- WATERMARK -->
+<div class="wm-bar">❄️ © 2026 Jitesh Salve Chemistry Simulations — All Rights Reserved</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-snowflakes" id="heroSnow"></div>
+  <div class="hero-chip">SYJC · Chapter 2 · Solutions · As per Maharashtra HSC Board Syllabus</div>
+  <h1>DEPRESSION IN<br/><span>FREEZING POINT</span></h1>
+  <div class="hero-sub">Colligative Property — ΔT<sub>f</sub> — How solutes lower the freezing point</div>
+  <div class="hero-formula">ΔT<sub>f</sub> = K<sub>f</sub> × m &nbsp;|&nbsp; ΔT<sub>f</sub> = i × K<sub>f</sub> × m</div>
+  <div class="hero-credit">Interactive Simulation by Jitesh Salve</div>
+</div>
+
+<!-- TABS -->
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="showTab('concept',this)">📖 Concept</button>
+  <button class="tab-btn" onclick="showTab('simulate',this)">🔬 Simulate</button>
+  <button class="tab-btn" onclick="showTab('graph',this)">📈 Graph</button>
+  <button class="tab-btn" onclick="showTab('symbols',this)">🔣 Symbols</button>
+  <button class="tab-btn" onclick="showTab('quiz',this)">🧠 Quiz</button>
+</div>
+
+<!-- ═══════════════ TAB 1: CONCEPT ═══════════════ -->
+<div id="tab-concept" class="tab-content active">
+<div class="section">
+
+  <div class="sec-title">What is Freezing Point Depression?</div>
+
+  <div class="fbox fbox-ice">
+    <div class="main" style="font-size:14px;line-height:1.7;">
+      "The decrease in the freezing point of a solvent when a non-volatile solute is dissolved in it"
+    </div>
+    <div class="note">The more solute you add → the lower the freezing point drops</div>
+  </div>
+
+  <div class="fbox fbox-blue">
+    <div class="main">ΔT<sub>f</sub> = K<sub>f</sub> × m</div>
+    <div class="note">
+      For <strong style="color:#90caf9;">Non-Electrolytes</strong> (e.g. glucose, urea, sugar)<br/><br/>
+      <strong style="color:var(--gold);">ΔT<sub>f</sub> = i × K<sub>f</sub> × m</strong><br/>
+      For <strong style="color:#90caf9;">Electrolytes</strong> (e.g. NaCl, CaCl<sub>2</sub>) — they split into ions
+    </div>
+  </div>
+
+  <div class="info-card">
+    <div class="ic-title">💡 Simple Idea — Why does freezing point drop?</div>
+    <p>
+      Pure water freezes at <strong>0°C</strong>. When you dissolve sugar or salt in it, the solute particles <strong>get in the way</strong> of water molecules trying to arrange themselves into ice crystals.<br/><br/>
+      So the water needs to be cooled to a <strong>lower temperature</strong> before it can freeze. The more solute particles you add, the more they block ice formation — and the freezing point drops further.<br/><br/>
+      This drop is called <strong>Depression in Freezing Point (ΔT<sub>f</sub>)</strong>.
+    </p>
+  </div>
+
+  <div class="concept-row">
+    <div class="mini-card">
+      <div class="mc-icon">💧</div>
+      <div class="mc-title">K<sub>f</sub> of Water</div>
+      <div class="mc-val">1.86 K·kg·mol⁻¹</div>
+    </div>
+    <div class="mini-card">
+      <div class="mc-icon">🌸</div>
+      <div class="mc-title">K<sub>f</sub> of Benzene</div>
+      <div class="mc-val">5.12 K·kg·mol⁻¹</div>
+    </div>
+    <div class="mini-card">
+      <div class="mc-icon">🧊</div>
+      <div class="mc-title">Pure Water T<sub>f</sub></div>
+      <div class="mc-val">0°C (273 K)</div>
+    </div>
+    <div class="mini-card">
+      <div class="mc-icon">⚗️</div>
+      <div class="mc-title">Pure Benzene T<sub>f</sub></div>
+      <div class="mc-val">5.5°C (278.5 K)</div>
+    </div>
+  </div>
+
+  <div class="sec-title">Real-Life Examples</div>
+
+  <div class="info-card">
+    <div class="ic-title">🚗 Antifreeze in Car Radiators</div>
+    <p>Cars in cold countries add <strong>ethylene glycol (antifreeze)</strong> to the radiator water. This depresses the freezing point well below 0°C, so the coolant doesn't freeze even in -20°C winters. Same chemistry as ΔT<sub>f</sub>!</p>
+  </div>
+
+  <div class="info-card">
+    <div class="ic-title">🛣️ Salt on Icy Roads</div>
+    <p>Road crews spread <strong>NaCl or CaCl<sub>2</sub></strong> on icy roads. The salt dissolves in the surface water, depresses its freezing point below 0°C, and melts the ice even when the air temperature is below 0°C. CaCl<sub>2</sub> works better — can you guess why? (i = 3!)</p>
+  </div>
+
+  <div class="info-card">
+    <div class="ic-title">🌊 Why Sea Water Freezes at −1.8°C</div>
+    <p>Ocean water contains dissolved salts (~3.5%). This depresses its freezing point from 0°C down to about <strong>−1.8°C</strong>. Polar ice forms because the temperature there drops even lower.</p>
+  </div>
+
+  <div class="tip-box">
+    <strong>📝 Board Exam Formula Summary:</strong><br/>
+    <strong>ΔT<sub>f</sub> = K<sub>f</sub> × m</strong> → non-electrolytes (i = 1)<br/>
+    <strong>ΔT<sub>f</sub> = i × K<sub>f</sub> × m</strong> → electrolytes<br/>
+    <strong>T<sub>f</sub> (solution) = T<sub>f</sub> (solvent) − ΔT<sub>f</sub></strong><br/>
+    where m = molality = moles of solute ÷ kg of solvent<br/><br/>
+    ΔT<sub>f</sub> is a <strong>colligative property</strong> — depends only on the <em>number</em> of particles, NOT on their nature.
+  </div>
+
+</div>
+</div>
+
+<!-- ═══════════════ TAB 2: SIMULATE ═══════════════ -->
+<div id="tab-simulate" class="tab-content">
+<div class="section">
+
+  <div class="sec-title">Interactive Simulation</div>
+  <p style="font-size:12px;color:#666;margin-bottom:12px;text-align:center;">Adjust the sliders and watch the freezing point drop in real time!</p>
+
+  <!-- Solvent Selector -->
+  <div class="sec-title" style="margin-bottom:8px;">Choose Solvent</div>
+  <div class="kf-select-row">
+    <button class="kf-btn active" id="kf-water" onclick="setKf('water')">💧 Water<br/><span style="font-size:9px;font-weight:600;">K<sub>f</sub> = 1.86 | T<sub>f</sub> = 0°C</span></button>
+    <button class="kf-btn" id="kf-benzene" onclick="setKf('benzene')">🌸 Benzene<br/><span style="font-size:9px;font-weight:600;">K<sub>f</sub> = 5.12 | T<sub>f</sub> = 5.5°C</span></button>
+  </div>
+
+  <!-- Sliders -->
+  <div class="slider-card">
+    <div class="sl-row">
+      <div class="sl-label">Molality (m)</div>
+      <div class="sl-val" id="sl-m-val">0.5 mol/kg</div>
+    </div>
+    <input type="range" id="sl-m" min="0" max="3" step="0.05" value="0.5" oninput="updateSim()"/>
+    <div style="display:flex;justify-content:space-between;font-size:9px;color:#aaa;font-weight:700;margin-top:2px;">
+      <span>0 mol/kg</span><span>Pure solvent</span><span>3 mol/kg</span>
+    </div>
+  </div>
+
+  <div class="slider-card">
+    <div class="sl-row">
+      <div class="sl-label">van't Hoff factor (i)</div>
+      <div class="sl-val" id="sl-i-val">i = 1</div>
+    </div>
+    <input type="range" id="sl-i" min="1" max="4" step="1" value="1" oninput="updateSim()"/>
+    <div style="display:flex;justify-content:space-between;font-size:9px;color:#aaa;font-weight:700;margin-top:2px;">
+      <span>i=1 (Glucose)</span><span>i=2 (NaCl)</span><span>i=3 (CaCl₂)</span><span>i=4 (AlCl₃)</span>
+    </div>
+    <div id="iLabel" style="font-size:11px;color:var(--icedark);font-weight:700;margin-top:6px;text-align:center;"></div>
+  </div>
+
+  <!-- Main visual: Crystal Canvas -->
+  <canvas id="crystalCanvas" width="380" height="260"></canvas>
+
+  <!-- Thermometers side by side -->
+  <div class="sim-wrap">
+    <div class="thermo-scene">
+      <!-- Pure Solvent Thermo -->
+      <div class="thermo-wrap">
+        <div class="thermo-label">PURE SOLVENT</div>
+        <div style="position:relative;">
+          <div class="thermo-outer">
+            <div class="thermo-fill" id="tf-pure" style="background:#ef5350;"></div>
+            <div class="thermo-bulb"></div>
+          </div>
+          <div class="thermo-scale">
+            <span id="ts-top">+8°</span><span>+4°</span><span>0°</span><span>-4°</span><span id="ts-bot">-8°</span>
+          </div>
+        </div>
+        <div class="thermo-readout">
+          <span id="tf-pure-val">0.0</span>°C
+          <span class="tr-label">Freezes Here</span>
+        </div>
+      </div>
+
+      <!-- Arrow -->
+      <div style="font-size:28px;color:var(--icedark);margin-bottom:60px;font-weight:900;">→</div>
+
+      <!-- Solution Thermo -->
+      <div class="thermo-wrap">
+        <div class="thermo-label">WITH SOLUTE</div>
+        <div style="position:relative;">
+          <div class="thermo-outer">
+            <div class="thermo-fill" id="tf-sol" style="background:#1565c0;"></div>
+            <div class="thermo-bulb"></div>
+          </div>
+          <div class="thermo-scale">
+            <span id="ts-top2">+8°</span><span>+4°</span><span>0°</span><span>-4°</span><span id="ts-bot2">-8°</span>
+          </div>
+        </div>
+        <div class="thermo-readout">
+          <span id="tf-sol-val">−0.93</span>°C
+          <span class="tr-label" style="color:var(--icedark);">New T<sub>f</sub></span>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center;font-size:12px;color:#555;font-weight:700;">
+      ΔT<sub>f</sub> = <span id="deltaLabel" style="color:var(--icedark);font-size:15px;font-weight:900;">0.93°C</span> drop in freezing point
+    </div>
+  </div>
+
+  <!-- Live Calculation -->
+  <div class="calc-box">
+    <div class="calc-title">📐 Step-by-Step Calculation</div>
+    <div class="calc-step"><span class="cs-label">Solvent K<sub>f</sub>:</span><span class="cs-val" id="ck-kf">1.86 K·kg·mol⁻¹</span></div>
+    <div class="calc-step"><span class="cs-label">Molality (m):</span><span class="cs-val" id="ck-m">0.50 mol/kg</span></div>
+    <div class="calc-step"><span class="cs-label">van't Hoff (i):</span><span class="cs-val" id="ck-i">1</span></div>
+    <div class="calc-step"><span class="cs-label">Formula:</span><span class="cs-val" id="ck-formula">ΔTf = i × Kf × m</span></div>
+    <div class="calc-step"><span class="cs-label">Substituting:</span><span class="cs-val" id="ck-sub">= 1 × 1.86 × 0.50</span></div>
+    <div class="calc-final">
+      <div class="cf-label">ΔT<sub>f</sub> (Depression)</div>
+      <div class="cf-val" id="ck-result">= 0.93°C</div>
+    </div>
+  </div>
+
+  <!-- Result chips -->
+  <div class="result-chips">
+    <div class="r-chip">
+      <div class="rc-label">T<sub>f</sub> Solvent</div>
+      <div class="rc-val" id="rc-tfsolvent">0.0°C</div>
+    </div>
+    <div class="r-chip">
+      <div class="rc-label">ΔT<sub>f</sub></div>
+      <div class="rc-val" id="rc-delta" style="color:var(--icedark);">0.93°C</div>
+    </div>
+    <div class="r-chip">
+      <div class="rc-label">T<sub>f</sub> Solution</div>
+      <div class="rc-val" id="rc-tfsol" style="color:var(--red);">−0.93°C</div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ═══════════════ TAB 3: GRAPH ═══════════════ -->
+<div id="tab-graph" class="tab-content">
+<div class="section">
+  <div class="sec-title">ΔT<sub>f</sub> vs Molality Graph</div>
+  <canvas id="graphCanvas" width="380" height="300"></canvas>
+  <div class="graph-legend">
+    <div class="leg-item"><div class="leg-line" style="background:#0288d1;"></div>i = 1 (Glucose)</div>
+    <div class="leg-item"><div class="leg-line" style="background:#c0392b;"></div>i = 2 (NaCl)</div>
+    <div class="leg-item"><div class="leg-line" style="background:#6a1b9a;"></div>i = 3 (CaCl₂)</div>
+    <div class="leg-item"><div class="leg-dot" style="background:#f39c12;border:2px solid #0a1628;"></div>Your point</div>
+  </div>
+
+  <div class="info-card">
+    <div class="ic-title">📊 What the graph tells us</div>
+    <p>
+      The graph shows that the <strong>depression in freezing point (ΔT<sub>f</sub>) increases linearly</strong> with molality. The slope of each line equals <strong>i × K<sub>f</sub></strong>.<br/><br/>
+      A steeper slope means more particles (higher i), which causes a greater depression. NaCl (i=2) gives a slope twice as steep as glucose (i=1)!
+    </p>
+  </div>
+
+  <div class="tip-box">
+    <strong>📝 Graph for Board Exam:</strong><br/>
+    X-axis = Molality (m) in mol/kg<br/>
+    Y-axis = Depression in Freezing Point (ΔT<sub>f</sub>) in °C<br/>
+    The graph is a <strong>straight line passing through origin</strong><br/>
+    Slope = K<sub>f</sub> (for non-electrolytes) or i × K<sub>f</sub> (for electrolytes)
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════ TAB 4: SYMBOLS ═══════════════ -->
+<div id="tab-symbols" class="tab-content">
+<div class="section">
+  <div class="sec-title">All Symbols Explained</div>
+
+  <table class="sym-table">
+    <thead>
+      <tr><th>Symbol</th><th>Full Name</th><th>Meaning & Unit</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>ΔT<sub>f</sub></td>
+        <td>Depression in Freezing Point</td>
+        <td>How many degrees the freezing point drops. Unit: °C or K</td>
+      </tr>
+      <tr>
+        <td>K<sub>f</sub></td>
+        <td>Cryoscopic Constant / Molal Freezing Point Depression Constant</td>
+        <td>A constant that depends only on the solvent. Water = 1.86, Benzene = 5.12. Unit: K·kg·mol⁻¹</td>
+      </tr>
+      <tr>
+        <td>m</td>
+        <td>Molality</td>
+        <td>Moles of solute per kg of solvent. m = W₂/(M₂ × W₁) × 1000. Unit: mol/kg or mol·kg⁻¹</td>
+      </tr>
+      <tr>
+        <td>i</td>
+        <td>van't Hoff Factor</td>
+        <td>Number of particles one formula unit gives on dissolution. Glucose→ i=1, NaCl → i=2, CaCl₂ → i=3</td>
+      </tr>
+      <tr>
+        <td>T<sub>f</sub></td>
+        <td>Freezing Point of Solution</td>
+        <td>T<sub>f</sub> (solution) = T<sub>f</sub> (pure solvent) − ΔT<sub>f</sub></td>
+      </tr>
+      <tr>
+        <td>T°<sub>f</sub></td>
+        <td>Freezing Point of Pure Solvent</td>
+        <td>Water = 0°C, Benzene = 5.5°C, Acetic acid = 16.6°C</td>
+      </tr>
+      <tr>
+        <td>W<sub>1</sub></td>
+        <td>Mass of Solvent</td>
+        <td>In grams (g) or kilograms (kg)</td>
+      </tr>
+      <tr>
+        <td>W<sub>2</sub></td>
+        <td>Mass of Solute</td>
+        <td>In grams (g)</td>
+      </tr>
+      <tr>
+        <td>M<sub>2</sub></td>
+        <td>Molar Mass of Solute</td>
+        <td>In g/mol. Used to find molality from mass data</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="fbox fbox-blue" style="margin-bottom:12px;">
+    <div class="main" style="font-size:13px;line-height:1.8;">
+      Complete Formula Chain<br/>
+      <span style="font-size:11px;opacity:0.7;">m = (W₂ × 1000) / (M₂ × W₁)</span><br/>
+      ΔT<sub>f</sub> = i × K<sub>f</sub> × m<br/>
+      T<sub>f</sub>(solution) = T°<sub>f</sub> − ΔT<sub>f</sub>
+    </div>
+    <div class="note">For finding molar mass: M₂ = (K<sub>f</sub> × W₂ × 1000) / (ΔT<sub>f</sub> × W₁)</div>
+  </div>
+
+  <div class="info-card">
+    <div class="ic-title">🧠 Memory Tricks</div>
+    <p>
+      <strong>K<sub>f</sub> for Water = 1.86</strong> → Remember "1.86 — Water Helps Every frost" (silly, but works!)<br/><br/>
+      <strong>CRYO</strong>scopic = CRYO = ICE → K<sub>f</sub> is about ICE / freezing<br/><br/>
+      <strong>ΔT<sub>f</sub> = i × K<sub>f</sub> × m</strong> → "I Keep Money" (i, K<sub>f</sub>, m)<br/><br/>
+      Higher i → more particles → greater ΔT<sub>f</sub> → lower freezing point<br/>
+      CaCl₂ (i=3) is 3× more effective than glucose (i=1) as a de-icer!
+    </p>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════ TAB 5: QUIZ ═══════════════ -->
+<div id="tab-quiz" class="tab-content">
+<div class="section">
+  <div class="sec-title">Test Your Understanding</div>
+  <div id="quizArea"></div>
+  <div class="score-box" id="scoreBox">
+    <div style="font-size:36px;">❄️</div>
+    <div class="score-big" id="scoreBig"></div>
+    <div class="score-msg" id="scoreMsg"></div>
+    <button class="btn-restart" onclick="startQuiz()">🔄 Try Again</button>
+  </div>
+</div>
+</div>
+
+<!-- FOOTER -->
+<!-- TERMS OF USE SECTION -->
+<div style="background:#0d1f3c;padding:14px 16px;border-top:2px solid rgba(200,168,75,0.3);">
+  <details style="cursor:pointer;">
+    <summary style="color:#c8a84b;font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;list-style:none;">
+      ⚖️ Terms of Use & Legal Notice (tap to read)
+    </summary>
+    <div style="margin-top:12px;font-size:11px;color:rgba(255,255,255,0.7);line-height:1.9;">
+      <strong style="color:#c8a84b;">Permitted Use:</strong> Personal study and learning by the intended student audience only.<br/>
+      <strong style="color:#c8a84b;">Not Permitted:</strong> Redistribution, resale, modification, screen recording for commercial use, or claiming authorship of this content in any form.<br/>
+      <strong style="color:#c8a84b;">Copyright:</strong> All content, code, visuals, animations, quiz questions, and explanations in this simulation are the exclusive intellectual property of Jitesh Salve, protected under the Indian Copyright Act, 1957.<br/>
+      <strong style="color:#c8a84b;">Violations:</strong> Sharing this file without the creator's written consent is a copyright violation. Legal action may be taken against any individual or entity found misusing this content.<br/>
+      <strong style="color:#c8a84b;">Disclaimer:</strong> This simulation is for educational reference only. While every effort is made for accuracy, the creator is not responsible for errors or omissions.<br/>
+      <strong style="color:#c8a84b;">Contact:</strong> For permissions, licensing, or queries, contact the creator directly through official channels.
+    </div>
+  </details>
+</div>
+
+<div class="footer">
+  <strong>© 2026 Jitesh Salve Chemistry Simulations</strong>
+  As per Maharashtra HSC Board Syllabus | Chapter 2 — Solutions | Version 1.0 · Created: 2026<br/>
+  Unauthorised copying, redistribution or modification is strictly prohibited · All Rights Reserved<br/><br/>
+  <span style="font-size:10px; opacity:0.8;">
+    This simulation is currently made available at no charge as a complimentary educational resource.
+    The creator reserves the right to introduce a subscription or paid access model in the future without prior notice.
+    Continued use after such change constitutes acceptance of the revised terms.
+  </span><br/><br/>
+  <span style="font-size:10px; opacity:0.7;">
+    This is a personal educational initiative by Jitesh Salve and is not affiliated with, endorsed by,
+    or representative of any government institution, college, or the Maharashtra State Board of Secondary
+    and Higher Secondary Education. | Sharing without written consent of the creator violates the Indian Copyright Act, 1957.
+  </span>
+</div>
+
+<script>
+// ══════════ CONTENT PROTECTION ══════════
+document.addEventListener('contextmenu', function(e) { e.preventDefault(); return false; });
+document.addEventListener('keydown', function(e) {
+  if ((e.ctrlKey && ['s','u','S','U'].includes(e.key)) ||
+      (e.ctrlKey && e.shiftKey && ['I','i','J','j','C','c'].includes(e.key)) ||
+      e.key === 'F12') {
+    e.preventDefault(); return false;
+  }
+});
+
+// ═══════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════
+var kfVal = 1.86, tfPure = 0, solventName = 'water';
+var molality = 0.5, iVal = 1;
+var animT = 0, rafId = null;
+var iLabels = ['', 'i = 1  (Non-electrolyte, e.g. Glucose, Urea)', 'i = 2  (Electrolyte, e.g. NaCl, KCl)', 'i = 3  (Electrolyte, e.g. CaCl₂, Na₂SO₄)', 'i = 4  (Electrolyte, e.g. AlCl₃, FeCl₃)'];
+
+// ═══════════════════════════════════════════════
+//  TAB SWITCHING
+// ═══════════════════════════════════════════════
+function showTab(name, btn) {
+  document.querySelectorAll('.tab-content').forEach(function(t){t.classList.remove('active');});
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+  if (name === 'graph') { drawGraph(); }
+}
+
+// ═══════════════════════════════════════════════
+//  SOLVENT SELECTOR
+// ═══════════════════════════════════════════════
+function setKf(s) {
+  solventName = s;
+  document.getElementById('kf-water').classList.toggle('active', s === 'water');
+  document.getElementById('kf-benzene').classList.toggle('active', s === 'benzene');
+  if (s === 'water') { kfVal = 1.86; tfPure = 0; }
+  else { kfVal = 5.12; tfPure = 5.5; }
+  updateSim();
+}
+
+// ═══════════════════════════════════════════════
+//  MAIN UPDATE
+// ═══════════════════════════════════════════════
+function updateSim() {
+  molality = parseFloat(document.getElementById('sl-m').value);
+  iVal = parseInt(document.getElementById('sl-i').value);
+
+  document.getElementById('sl-m-val').textContent = molality.toFixed(2) + ' mol/kg';
+  document.getElementById('sl-i-val').textContent = 'i = ' + iVal;
+  document.getElementById('iLabel').textContent = iLabels[iVal] || '';
+
+  var delta = iVal * kfVal * molality;
+  var tfSol = tfPure - delta;
+
+  // Thermometers
+  var range = 10; // ±range degrees around pure Tf
+  var purePct = 75; // pure always at 75% fill (middle-ish of scale)
+  var solPct = Math.max(5, Math.min(95, purePct - (delta / range) * 50));
+
+  document.getElementById('tf-pure').style.height = purePct + '%';
+  document.getElementById('tf-pure').style.background = '#ef5350';
+  document.getElementById('tf-sol').style.height = solPct + '%';
+  // Color shifts from warm red → cold blue as delta increases
+  var blueRatio = Math.min(1, delta / 6);
+  var r = Math.round(239 - blueRatio * 218);
+  var g = Math.round(83 - blueRatio * 83);
+  var b = Math.round(80 + blueRatio * 112);
+  document.getElementById('tf-sol').style.background = 'rgb('+r+','+g+','+b+')';
+
+  document.getElementById('tf-pure-val').textContent = tfPure.toFixed(1);
+  document.getElementById('tf-sol-val').textContent = (tfSol >= 0 ? '' : '−') + Math.abs(tfSol).toFixed(2);
+  document.getElementById('deltaLabel').textContent = delta.toFixed(3) + '°C';
+
+  // Update scale labels based on range
+  var step = range / 2;
+  document.getElementById('ts-top').textContent = '+' + (tfPure + step).toFixed(0) + '°';
+  document.getElementById('ts-bot').textContent = (tfPure - step).toFixed(0) + '°';
+  document.getElementById('ts-top2').textContent = '+' + (tfPure + step).toFixed(0) + '°';
+  document.getElementById('ts-bot2').textContent = (tfPure - step).toFixed(0) + '°';
+
+  // Result chips
+  document.getElementById('rc-tfsolvent').textContent = tfPure.toFixed(1) + '°C';
+  document.getElementById('rc-delta').textContent = delta.toFixed(3) + '°C';
+  document.getElementById('rc-tfsol').textContent = (tfSol >= 0 ? '+' : '') + tfSol.toFixed(3) + '°C';
+
+  // Calculation box
+  document.getElementById('ck-kf').textContent = kfVal + ' K·kg·mol⁻¹ (' + (solventName === 'water' ? 'Water' : 'Benzene') + ')';
+  document.getElementById('ck-m').textContent = molality.toFixed(2) + ' mol/kg';
+  document.getElementById('ck-i').textContent = iVal + (iVal === 1 ? ' (non-electrolyte)' : ' (electrolyte, splits into ' + iVal + ' ions)');
+  document.getElementById('ck-formula').textContent = iVal === 1 ? 'ΔTf = Kf × m' : 'ΔTf = i × Kf × m';
+  document.getElementById('ck-sub').textContent = '= ' + iVal + ' × ' + kfVal + ' × ' + molality.toFixed(2);
+  document.getElementById('ck-result').textContent = '= ' + delta.toFixed(3) + '°C';
+
+  // Graph dot update
+  if (document.getElementById('tab-graph').classList.contains('active')) { drawGraph(); }
+}
+
+// ═══════════════════════════════════════════════
+//  CRYSTAL CANVAS ANIMATION
+// ═══════════════════════════════════════════════
+var crystals = [];
+var particles = [];
+(function initParticles() {
+  for (var i = 0; i < 40; i++) {
+    particles.push({
+      x: Math.random() * 380, y: Math.random() * 260,
+      vx: (Math.random()-0.5)*0.8, vy: (Math.random()-0.5)*0.8,
+      r: 3 + Math.random()*4, phase: Math.random()*Math.PI*2,
+      color: 'rgba(2,136,209,' + (0.3 + Math.random()*0.5) + ')'
+    });
+  }
+})();
+
+function drawCrystalCanvas() {
+  var canvas = document.getElementById('crystalCanvas');
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var W = 380, H = 260;
+  animT += 0.02;
+
+  var delta = iVal * kfVal * molality;
+  var iceIntensity = Math.max(0, 1 - delta / 6); // 1 = lots of ice, 0 = no ice
+
+  ctx.clearRect(0, 0, W, H);
+
+  // Background gradient — shifts from icy blue → darker as more solute
+  var grad = ctx.createLinearGradient(0, 0, 0, H);
+  var bg1 = lerpColor('#c8e6f9', '#1a3a5c', Math.min(1, delta/5));
+  var bg2 = lerpColor('#90caf9', '#0a1628', Math.min(1, delta/5));
+  grad.addColorStop(0, bg1);
+  grad.addColorStop(1, bg2);
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, W, H);
+
+  // Section divider — left half = pure, right half = solution
+  ctx.strokeStyle = 'rgba(200,168,75,0.6)';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([6, 4]);
+  ctx.beginPath();
+  ctx.moveTo(W/2, 0);
+  ctx.lineTo(W/2, H);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Labels
+  ctx.fillStyle = 'rgba(200,168,75,0.9)';
+  ctx.font = 'bold 10px Segoe UI';
+  ctx.textAlign = 'center';
+  ctx.fillText('PURE SOLVENT', W/4, 16);
+  ctx.fillText('WITH SOLUTE (m = ' + molality.toFixed(2) + ')', 3*W/4, 16);
+
+  // ── LEFT SIDE: Pure solvent — ice crystals form freely ──
+  drawIceCrystals(ctx, 5, 25, W/2-10, H-25, iceIntensity, animT, false);
+
+  // ── RIGHT SIDE: Solution — fewer crystals, more solute particles ──
+  var soluteCount = Math.round(molality * iVal * 12);
+  drawIceCrystals(ctx, W/2+5, 25, W/2-10, H-25, iceIntensity * 0.2, animT + 1, true);
+  drawSoluteParticles(ctx, W/2+5, 25, W/2-10, H-25, soluteCount, animT, particles);
+
+  // Temperature labels
+  ctx.fillStyle = 'white';
+  ctx.font = 'bold 11px Segoe UI';
+  ctx.textAlign = 'center';
+  ctx.fillText('T\u1D453 = ' + tfPure.toFixed(1) + '\u00B0C', W/4, H-8);
+  var tfSol = tfPure - delta;
+  ctx.fillStyle = delta > 0 ? '#80d8ff' : 'white';
+  ctx.fillText('T\u1D453 = ' + (tfSol>=0?'':'\u2212') + Math.abs(tfSol).toFixed(2) + '\u00B0C', 3*W/4, H-8);
+
+  // Watermark
+  ctx.save();
+  ctx.globalAlpha = 0.12;
+  ctx.fillStyle = 'white';
+  ctx.font = 'bold 11px Segoe UI';
+  ctx.textAlign = 'center';
+  ctx.fillText('\u00A9 2026 Jitesh Salve', W/2, H/2 + 4);
+  ctx.restore();
+
+  rafId = requestAnimationFrame(drawCrystalCanvas);
+}
+
+function drawIceCrystals(ctx, ox, oy, w, h, intensity, t, small) {
+  if (intensity < 0.02) return;
+  var count = Math.round(intensity * (small ? 4 : 14));
+  var size = small ? 10 : 18;
+  for (var ci = 0; ci < count; ci++) {
+    var seed = ci * 73 + (small ? 500 : 0);
+    var cx2 = ox + ((seed * 37 + 11) % (w - 20)) + 10;
+    var cy2 = oy + ((seed * 53 + 17) % (h - 20)) + 10;
+    // Slow drift
+    cx2 += Math.sin(t * 0.3 + ci) * 3;
+    cy2 += Math.cos(t * 0.4 + ci) * 2;
+    drawSnowflake(ctx, cx2, cy2, size * (0.6 + 0.4 * intensity), intensity, t + ci);
+  }
+}
+
+function drawSnowflake(ctx, cx, cy, size, alpha, t) {
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate(t * 0.2);
+  ctx.globalAlpha = Math.min(0.9, alpha * 0.9);
+  ctx.strokeStyle = '#b3e5fc';
+  ctx.lineWidth = 1.5;
+  for (var arm = 0; arm < 6; arm++) {
+    ctx.save();
+    ctx.rotate((arm * Math.PI) / 3);
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(0, size);
+    // Side branches
+    ctx.moveTo(0, size * 0.4);
+    ctx.lineTo(size * 0.25, size * 0.65);
+    ctx.moveTo(0, size * 0.4);
+    ctx.lineTo(-size * 0.25, size * 0.65);
+    ctx.moveTo(0, size * 0.7);
+    ctx.lineTo(size * 0.2, size * 0.9);
+    ctx.moveTo(0, size * 0.7);
+    ctx.lineTo(-size * 0.2, size * 0.9);
+    ctx.stroke();
+    ctx.restore();
+  }
+  // Center dot
+  ctx.beginPath();
+  ctx.arc(0, 0, 2.5, 0, Math.PI*2);
+  ctx.fillStyle = '#e1f5fe';
+  ctx.fill();
+  ctx.restore();
+}
+
+function drawSoluteParticles(ctx, ox, oy, w, h, count, t, particles) {
+  var colors = ['rgba(239,83,80,0.75)','rgba(156,39,176,0.75)','rgba(255,152,0,0.75)','rgba(76,175,80,0.75)'];
+  for (var pi = 0; pi < Math.min(count, 30); pi++) {
+    var p = particles[pi % particles.length];
+    var px = ox + ((p.x * 0.8 + pi * 41) % (w - 12)) + 6;
+    var py = oy + ((p.y * 0.8 + pi * 29) % (h - 12)) + 6;
+    px += Math.sin(t * 0.6 + pi) * 4;
+    py += Math.cos(t * 0.5 + pi * 0.7) * 3;
+    ctx.beginPath();
+    ctx.arc(px, py, 5.5, 0, Math.PI*2);
+    ctx.fillStyle = colors[pi % colors.length];
+    ctx.fill();
+    // Ion label
+    ctx.fillStyle = 'white';
+    ctx.font = 'bold 7px Segoe UI';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(iVal > 1 ? '+' : '\u2022', px, py);
+    ctx.textBaseline = 'alphabetic';
+  }
+}
+
+function lerpColor(c1, c2, t) {
+  var p = function(s) { return [parseInt(s.slice(1,3),16),parseInt(s.slice(3,5),16),parseInt(s.slice(5,7),16)]; };
+  var a = p(c1), b = p(c2);
+  var r = Math.round(a[0] + (b[0]-a[0])*t);
+  var g = Math.round(a[1] + (b[1]-a[1])*t);
+  var bl = Math.round(a[2] + (b[2]-a[2])*t);
+  return 'rgb('+r+','+g+','+bl+')';
+}
+
+// ═══════════════════════════════════════════════
+//  HERO SNOWFLAKES
+// ═══════════════════════════════════════════════
+(function spawnSnowflakes() {
+  var container = document.getElementById('heroSnow');
+  var snowflakes = ['❄','❅','❆','✦','·'];
+  for (var i = 0; i < 12; i++) {
+    var sf = document.createElement('div');
+    sf.className = 'sf';
+    sf.textContent = snowflakes[i % snowflakes.length];
+    sf.style.left = (Math.random() * 95) + '%';
+    sf.style.animationDuration = (3 + Math.random() * 5) + 's';
+    sf.style.animationDelay = (Math.random() * 4) + 's';
+    sf.style.fontSize = (14 + Math.random() * 16) + 'px';
+    container.appendChild(sf);
+  }
+})();
+
+// ═══════════════════════════════════════════════
+//  GRAPH
+// ═══════════════════════════════════════════════
+function drawGraph() {
+  var canvas = document.getElementById('graphCanvas');
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var W = 380, H = 300;
+  ctx.clearRect(0, 0, W, H);
+
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(0, 0, W, H);
+
+  var pad = {l:55, r:20, t:30, b:55};
+  var gW = W - pad.l - pad.r, gH = H - pad.t - pad.b;
+
+  // Grid
+  ctx.strokeStyle = '#eaecf0';
+  ctx.lineWidth = 1;
+  var ySteps = 5, xSteps = 6;
+  for (var yi = 0; yi <= ySteps; yi++) {
+    var gy = pad.t + (yi/ySteps)*gH;
+    ctx.beginPath(); ctx.moveTo(pad.l, gy); ctx.lineTo(W-pad.r, gy); ctx.stroke();
+    var yVal = ((ySteps - yi) / ySteps) * 6;
+    ctx.fillStyle = '#888'; ctx.font = '9px Segoe UI'; ctx.textAlign = 'right';
+    ctx.fillText(yVal.toFixed(1), pad.l-5, gy+3);
+  }
+  for (var xi = 0; xi <= xSteps; xi++) {
+    var gx = pad.l + (xi/xSteps)*gW;
+    ctx.beginPath(); ctx.moveTo(gx, pad.t); ctx.lineTo(gx, pad.t+gH); ctx.stroke();
+    ctx.fillStyle = '#888'; ctx.font = '9px Segoe UI'; ctx.textAlign = 'center';
+    ctx.fillText(((xi/xSteps)*3).toFixed(1), gx, pad.t+gH+13);
+  }
+
+  // Axes
+  ctx.strokeStyle = '#bbb'; ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(pad.l, pad.t);
+  ctx.lineTo(pad.l, pad.t+gH);
+  ctx.lineTo(pad.l+gW, pad.t+gH);
+  ctx.stroke();
+
+  // Axis labels
+  ctx.save();
+  ctx.translate(13, pad.t+gH/2);
+  ctx.rotate(-Math.PI/2);
+  ctx.fillStyle = '#333'; ctx.font = 'bold 10px Segoe UI'; ctx.textAlign = 'center';
+  ctx.fillText('\u0394Tf (\u00B0C)', 0, 0);
+  ctx.restore();
+  ctx.fillStyle = '#333'; ctx.font = 'bold 10px Segoe UI'; ctx.textAlign = 'center';
+  ctx.fillText('Molality (mol/kg)', pad.l + gW/2, H-8);
+
+  // Title
+  ctx.fillStyle = var_navy(); ctx.font = 'bold 11px Segoe UI'; ctx.textAlign = 'center';
+  ctx.fillText('\u0394Tf vs Molality — ' + (solventName==='water'?'Water (Kf=1.86)':'Benzene (Kf=5.12)'), W/2, 18);
+
+  // Lines for i=1,2,3
+  var lineData = [
+    {i:1, color:'#0288d1', label:'i=1'},
+    {i:2, color:'#c0392b', label:'i=2'},
+    {i:3, color:'#6a1b9a', label:'i=3'}
+  ];
+  var maxM = 3, maxDelta = 6;
+
+  lineData.forEach(function(ld) {
+    ctx.beginPath();
+    for (var step = 0; step <= 60; step++) {
+      var mStep = (step/60)*maxM;
+      var dStep = ld.i * kfVal * mStep;
+      var px = pad.l + (mStep/maxM)*gW;
+      var py = pad.t + gH - (Math.min(dStep, maxDelta)/maxDelta)*gH;
+      step === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+    }
+    ctx.strokeStyle = ld.color;
+    ctx.lineWidth = 2.5;
+    ctx.stroke();
+  });
+
+  // Current point (orange dot)
+  var delta = iVal * kfVal * molality;
+  if (delta <= maxDelta && molality <= maxM) {
+    var dotX = pad.l + (molality/maxM)*gW;
+    var dotY = pad.t + gH - (delta/maxDelta)*gH;
+    ctx.beginPath();
+    ctx.arc(dotX, dotY, 8, 0, Math.PI*2);
+    ctx.fillStyle = '#f39c12';
+    ctx.fill();
+    ctx.strokeStyle = var_navy();
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    // Label
+    ctx.fillStyle = var_navy();
+    ctx.font = 'bold 10px Segoe UI';
+    ctx.textAlign = 'left';
+    ctx.fillText('\u0394Tf=' + delta.toFixed(2), dotX+12, dotY+4);
+  }
+
+  // Watermark
+  ctx.save();
+  ctx.globalAlpha = 0.08;
+  ctx.fillStyle = '#0a1628';
+  ctx.font = 'bold 14px Segoe UI';
+  ctx.textAlign = 'center';
+  ctx.fillText('\u00A9 2026 Jitesh Salve', W/2, H/2+5);
+  ctx.restore();
+}
+
+function var_navy() { return '#0a1628'; }
+
+// ═══════════════════════════════════════════════
+//  QUIZ
+// ═══════════════════════════════════════════════
+var quizData = [
+  {
+    q: 'Depression in freezing point (ΔTf) is a _______ property.',
+    opts: ['Additive', 'Constitutive', 'Colligative', 'Intensive'],
+    ans: 2,
+    fb: '✅ Correct! ΔTf is a colligative property — it depends only on the NUMBER of solute particles, not their identity or nature.'
+  },
+  {
+    q: 'What is the formula for depression in freezing point for a non-electrolyte?',
+    opts: ['ΔTf = Kb × m', 'ΔTf = i × Kf × m', 'ΔTf = Kf × m', 'ΔTf = Kf / m'],
+    ans: 2,
+    fb: '✅ Correct! For non-electrolytes (i=1): ΔTf = Kf × m. For electrolytes: ΔTf = i × Kf × m. Do not confuse Kf (freezing) with Kb (boiling)!'
+  },
+  {
+    q: 'The cryoscopic constant (Kf) of water is:',
+    opts: ['0.52 K·kg/mol', '1.86 K·kg/mol', '5.12 K·kg/mol', '3.07 K·kg/mol'],
+    ans: 1,
+    fb: '✅ Correct! Kf of water = 1.86 K·kg·mol⁻¹. Kf of benzene = 5.12. Kb (boiling) of water = 0.52. Do not mix these up!'
+  },
+  {
+    q: 'A solution of NaCl (i=2) has the same molality as glucose (i=1). Which will show a greater depression in freezing point?',
+    opts: ['Glucose', 'NaCl', 'Both equal', 'Depends on temperature'],
+    ans: 1,
+    fb: '✅ Correct! NaCl dissociates into 2 ions (Na⁺ + Cl⁻), so i=2 and ΔTf is twice as large compared to glucose (i=1) at the same molality.'
+  },
+  {
+    q: 'Salt is spread on icy roads in winter. The scientific reason is:',
+    opts: ['Salt absorbs heat', 'Salt increases melting point of ice', 'Salt depresses the freezing point of water below 0°C', 'Salt makes roads rough'],
+    ans: 2,
+    fb: '✅ Correct! Salt dissolves in surface water and depresses its freezing point below 0°C. This causes the ice to melt even when air temperature is below 0°C.'
+  },
+  {
+    q: 'If ΔTf = 1.86°C for a solution in water, what is the molality (assuming i=1)?',
+    opts: ['0.5 mol/kg', '1.0 mol/kg', '2.0 mol/kg', '1.86 mol/kg'],
+    ans: 1,
+    fb: '✅ Correct! ΔTf = Kf × m → 1.86 = 1.86 × m → m = 1.0 mol/kg. Always divide ΔTf by Kf to get molality.'
+  },
+  {
+    q: 'The freezing point of a solution is always _______ the freezing point of the pure solvent.',
+    opts: ['Higher than', 'Equal to', 'Lower than', 'Unrelated to'],
+    ans: 2,
+    fb: '✅ Correct! Adding any non-volatile solute always LOWERS (depresses) the freezing point. Tf(solution) = Tf(solvent) − ΔTf.'
+  },
+  {
+    q: 'Which solution would depress the freezing point of water the MOST at the same molality?',
+    opts: ['Glucose (i=1)', 'NaCl (i=2)', 'CaCl₂ (i=3)', 'All equal'],
+    ans: 2,
+    fb: '✅ Correct! CaCl₂ → Ca²⁺ + 2Cl⁻, giving i=3. Since ΔTf = i × Kf × m, the highest i gives the greatest depression. This is why CaCl₂ is preferred over NaCl for de-icing roads!'
+  }
+];
+
+var qIdx = 0, score = 0;
+
+function startQuiz() {
+  qIdx = 0; score = 0;
+  document.getElementById('scoreBox').style.display = 'none';
+  document.getElementById('quizArea').innerHTML = '';
+  renderQ();
+}
+function renderQ() {
+  if (qIdx >= quizData.length) { showScore(); return; }
+  var q = quizData[qIdx];
+  var html = '<div class="quiz-card">';
+  html += '<div class="q-num">QUESTION ' + (qIdx+1) + ' OF ' + quizData.length + '</div>';
+  html += '<div class="q-text">' + q.q + '</div>';
+  html += '<div class="q-opts">';
+  q.opts.forEach(function(o, oi) {
+    html += '<button class="q-opt" id="qo'+oi+'" onclick="checkAns('+oi+')">' + o + '</button>';
+  });
+  html += '</div>';
+  html += '<div class="q-fb" id="qfb"></div>';
+  html += '<button class="btn-next" id="btnNext" onclick="nextQ()">Next Question →</button>';
+  html += '</div>';
+  document.getElementById('quizArea').innerHTML = html;
+}
+function checkAns(chosen) {
+  var q = quizData[qIdx];
+  document.querySelectorAll('.q-opt').forEach(function(b){b.disabled=true;});
+  var fb = document.getElementById('qfb');
+  if (chosen === q.ans) {
+    score++;
+    document.getElementById('qo'+chosen).className = 'q-opt correct';
+    fb.className = 'q-fb show ok';
+  } else {
+    document.getElementById('qo'+chosen).className = 'q-opt wrong';
+    document.getElementById('qo'+q.ans).className = 'q-opt correct';
+    fb.className = 'q-fb show no';
+  }
+  fb.textContent = q.fb.replace('✅ Correct! ', chosen === q.ans ? '✅ Correct! ' : '❌ Wrong. ');
+  if (chosen !== q.ans) fb.textContent = '❌ Wrong. Correct: ' + q.opts[q.ans] + '. ' + q.fb.replace('✅ Correct! ','');
+  document.getElementById('btnNext').style.display = 'block';
+}
+function nextQ() { qIdx++; renderQ(); }
+function showScore() {
+  document.getElementById('quizArea').innerHTML = '';
+  var sb = document.getElementById('scoreBox');
+  sb.style.display = 'block';
+  document.getElementById('scoreBig').textContent = score + ' / ' + quizData.length;
+  var pct = (score/quizData.length)*100;
+  var msgs = ['💪 Keep studying! Read the concept tab carefully.','📖 Good effort! A few more revisions needed.','👏 Well done! Almost there.','🎉 Excellent! Perfect understanding of freezing point depression!'];
+  document.getElementById('scoreMsg').textContent = msgs[pct < 40 ? 0 : pct < 65 ? 1 : pct < 90 ? 2 : 3];
+}
+
+// ═══════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════
+window.onload = function() {
+  startQuiz();
+  updateSim();
+  drawCrystalCanvas();
+};
+</script>
+</body>
+</html>

@@ -1,0 +1,1389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>Osmotic Pressure — Jitesh Salve Chemistry Simulations</title>
+<style>
+:root {
+  --navy: #0a1628;
+  --gold: #c8a84b;
+  --red: #c0392b;
+  --green: #1a7a4a;
+  --blue: #1565c0;
+  --light: #f4f6fb;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--light); color: var(--navy); }
+
+/* WATERMARK BAR */
+.wm-bar {
+  background: var(--navy);
+  color: var(--gold);
+  text-align: center;
+  padding: 7px 10px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* HERO */
+.hero {
+  background: linear-gradient(150deg, #0a1628 0%, #0d2240 55%, #112d52 100%);
+  padding: 22px 16px 20px;
+  text-align: center;
+}
+.hero-chip {
+  display: inline-block;
+  background: var(--gold);
+  color: var(--navy);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  padding: 4px 14px;
+  border-radius: 20px;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+.hero h1 {
+  font-size: 26px;
+  font-weight: 900;
+  color: white;
+  letter-spacing: 1px;
+  line-height: 1.15;
+}
+.hero h1 span { color: var(--gold); }
+.hero-sub { color: rgba(255,255,255,0.6); font-size: 12px; margin-top: 5px; }
+.hero-formula {
+  display: inline-block;
+  background: rgba(200,168,75,0.15);
+  border: 1px solid rgba(200,168,75,0.4);
+  color: var(--gold);
+  font-size: 17px;
+  font-weight: 800;
+  padding: 7px 22px;
+  border-radius: 10px;
+  margin-top: 12px;
+  letter-spacing: 2px;
+}
+.hero-credit { color: rgba(200,168,75,0.75); font-size: 11px; font-style: italic; margin-top: 8px; }
+
+/* TABS */
+.tab-bar {
+  display: flex;
+  background: white;
+  border-bottom: 3px solid var(--gold);
+  overflow-x: auto;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.tab-bar::-webkit-scrollbar { display: none; }
+.tab-btn {
+  flex: none;
+  padding: 13px 16px;
+  font-size: 12px;
+  font-weight: 800;
+  color: #999;
+  background: none;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+  font-family: inherit;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -3px;
+  letter-spacing: 0.5px;
+}
+.tab-btn.active { color: var(--navy); border-bottom-color: var(--gold); }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+.section { padding: 16px 14px; }
+.sec-title {
+  font-size: 12px;
+  font-weight: 900;
+  color: var(--navy);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  border-left: 4px solid var(--gold);
+  padding-left: 10px;
+  margin-bottom: 14px;
+}
+
+/* CONCEPT TAB */
+.fbox {
+  background: var(--navy);
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 12px;
+  text-align: center;
+}
+.fbox .main { font-size: 18px; font-weight: 800; color: var(--gold); letter-spacing: 2px; margin-bottom: 5px; }
+.fbox .note { font-size: 12px; color: rgba(255,255,255,0.65); line-height: 1.6; }
+.fbox-blue { background: linear-gradient(135deg, #0d2240, #1a4070); }
+
+.info-card {
+  background: white;
+  border-radius: 14px;
+  padding: 14px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+}
+.info-card .ic-title { font-size: 13px; font-weight: 800; color: var(--navy); margin-bottom: 8px; }
+.info-card p { font-size: 13px; color: #444; line-height: 1.7; }
+
+.tonicity-card {
+  background: white;
+  border-radius: 14px;
+  padding: 14px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+  border-left: 5px solid var(--gold);
+}
+.tonicity-card.iso { border-left-color: var(--green); }
+.tonicity-card.hyper { border-left-color: var(--red); }
+.tonicity-card.hypo { border-left-color: var(--blue); }
+.t-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  margin-bottom: 7px;
+  text-transform: uppercase;
+}
+.t-badge.iso { background: #d5f5e3; color: var(--green); }
+.t-badge.hyper { background: #fadbd8; color: var(--red); }
+.t-badge.hypo { background: #d6eaf8; color: var(--blue); }
+.t-title { font-size: 14px; font-weight: 800; color: var(--navy); margin-bottom: 5px; }
+.t-desc { font-size: 12px; color: #555; line-height: 1.65; }
+
+.tip-box {
+  background: #fef9e7;
+  border: 2px solid var(--gold);
+  border-radius: 12px;
+  padding: 13px;
+  font-size: 12.5px;
+  line-height: 1.65;
+  color: #333;
+  margin-bottom: 12px;
+}
+
+/* SIMULATION TAB */
+.sol-selector {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.sol-btn {
+  flex: 1;
+  min-width: 120px;
+  padding: 12px 8px;
+  border: 3px solid #ddd;
+  border-radius: 12px;
+  background: white;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: center;
+  transition: all 0.25s;
+  line-height: 1.4;
+}
+.sol-btn.active-iso { border-color: var(--green); background: #eafaf1; color: var(--green); }
+.sol-btn.active-hyper { border-color: var(--red); background: #fdedec; color: var(--red); }
+.sol-btn.active-hypo { border-color: var(--blue); background: #ebf5fb; color: var(--blue); }
+
+#sim-canvas-wrap {
+  position: relative;
+  margin: 0 auto 14px;
+  max-width: 380px;
+}
+#simCanvas {
+  width: 100%;
+  height: auto;
+  border-radius: 16px;
+  display: block;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+
+.state-box {
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  font-size: 13px;
+  line-height: 1.65;
+  transition: all 0.4s;
+}
+.state-box .sb-title { font-size: 14px; font-weight: 900; margin-bottom: 6px; }
+.state-box.iso { background: #eafaf1; border: 2px solid var(--green); color: #145a32; }
+.state-box.hyper { background: #fdedec; border: 2px solid var(--red); color: #7b241c; }
+.state-box.hypo { background: #ebf5fb; border: 2px solid var(--blue); color: #154360; }
+
+.conc-section { margin-bottom: 14px; }
+.conc-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.conc-lbl { font-size: 11px; font-weight: 800; color: var(--navy); min-width: 80px; }
+.conc-track {
+  flex: 1;
+  height: 18px;
+  background: #e0e4ea;
+  border-radius: 9px;
+  overflow: hidden;
+}
+.conc-fill {
+  height: 100%;
+  border-radius: 9px;
+  transition: width 0.8s cubic-bezier(0.4,0,0.2,1), background 0.8s;
+}
+.conc-val { font-size: 11px; font-weight: 800; min-width: 44px; text-align: right; color: var(--navy); }
+
+/* COMPARE TAB */
+.compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+  margin-bottom: 14px;
+}
+.compare-table th {
+  background: var(--navy);
+  color: var(--gold);
+  padding: 10px 8px;
+  text-align: center;
+  font-weight: 800;
+  font-size: 11px;
+}
+.compare-table td {
+  padding: 10px 8px;
+  text-align: center;
+  border-bottom: 1px solid #f0f2f5;
+  color: #333;
+  font-weight: 600;
+}
+.compare-table tr:nth-child(even) td { background: #f8f9fa; }
+
+#graphCanvas {
+  width: 100%;
+  height: auto;
+  border-radius: 14px;
+  display: block;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+  margin-bottom: 14px;
+}
+.graph-legend {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 14px;
+}
+.leg-item { display: flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 700; color: var(--navy); }
+.leg-dot { width: 12px; height: 12px; border-radius: 50%; }
+
+/* QUIZ TAB */
+.quiz-card {
+  background: white;
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  margin-bottom: 10px;
+}
+.q-num { font-size: 10px; color: #aaa; font-weight: 700; margin-bottom: 5px; letter-spacing: 1px; }
+.q-text { font-size: 14px; font-weight: 800; color: var(--navy); margin-bottom: 14px; line-height: 1.5; }
+.q-opts { display: flex; flex-direction: column; gap: 8px; }
+.q-opt {
+  background: var(--light);
+  border: 2px solid #e0e4ea;
+  border-radius: 10px;
+  padding: 11px 14px;
+  font-size: 13px;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  font-weight: 600;
+  color: var(--navy);
+  transition: border-color 0.15s, background 0.15s;
+  width: 100%;
+}
+.q-opt.correct { background: #d5f5e3; border-color: #27ae60; color: #145a32; }
+.q-opt.wrong   { background: #fadbd8; border-color: #e74c3c; color: #7b241c; }
+.q-fb { margin-top: 10px; font-size: 12px; font-weight: 700; padding: 9px 12px; border-radius: 8px; display: none; line-height: 1.5; }
+.q-fb.show { display: block; }
+.q-fb.ok { background: #d5f5e3; color: #145a32; }
+.q-fb.no { background: #fadbd8; color: #7b241c; }
+.btn-next {
+  width: 100%;
+  margin-top: 12px;
+  padding: 13px;
+  background: var(--navy);
+  color: var(--gold);
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  display: none;
+  font-family: inherit;
+}
+.score-box {
+  text-align: center;
+  background: white;
+  border-radius: 16px;
+  padding: 30px 20px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  display: none;
+}
+.score-big { font-size: 52px; font-weight: 900; color: var(--navy); margin: 10px 0; }
+.score-msg { font-size: 14px; color: #555; margin-bottom: 20px; }
+.btn-restart {
+  padding: 13px 30px;
+  background: var(--navy);
+  color: var(--gold);
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+/* SYMBOLS TAB */
+.sym-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+  margin-bottom: 12px;
+}
+.sym-table th {
+  background: var(--navy);
+  color: var(--gold);
+  padding: 10px 8px;
+  text-align: left;
+  font-weight: 800;
+  font-size: 11px;
+}
+.sym-table td {
+  padding: 10px 8px;
+  border-bottom: 1px solid #f0f2f5;
+  vertical-align: top;
+  line-height: 1.5;
+}
+.sym-table td:first-child { font-weight: 800; color: var(--navy); font-size: 14px; }
+.sym-table tr:nth-child(even) td { background: #f8f9fa; }
+
+/* FOOTER */
+.footer {
+  background: var(--navy);
+  color: var(--gold);
+  text-align: center;
+  padding: 16px 12px;
+  font-size: 10.5px;
+  letter-spacing: 1px;
+  margin-top: 10px;
+}
+.footer strong { display: block; font-size: 13px; margin-bottom: 4px; }
+</style>
+</head>
+<body>
+
+<div class="wm-bar">⚗️ © 2026 Jitesh Salve Chemistry Simulations — All Rights Reserved</div>
+
+<div class="hero">
+  <div class="hero-chip">SYJC · Chapter 2: Solutions · As per Maharashtra HSC Board Syllabus</div>
+  <h1>OSMOTIC <span>PRESSURE</span></h1>
+  <div class="hero-sub">Isotonic · Hypertonic · Hypotonic — RBC Cell Simulation</div>
+  <div class="hero-formula">π = CRT &nbsp;|&nbsp; π = iCRT</div>
+  <div class="hero-credit">Interactive Simulation by Jitesh Salve</div>
+</div>
+
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="showTab('concept',this)">📖 Concept</button>
+  <button class="tab-btn" onclick="showTab('simulate',this)">🔬 Simulate</button>
+  <button class="tab-btn" onclick="showTab('compare',this)">⚖️ Compare</button>
+  <button class="tab-btn" onclick="showTab('symbols',this)">🔣 Symbols</button>
+  <button class="tab-btn" onclick="showTab('quiz',this)">🧠 Quiz</button>
+</div>
+
+<!-- ══════════════ TAB 1: CONCEPT ══════════════ -->
+<div id="tab-concept" class="tab-content active">
+<div class="section">
+
+  <div class="sec-title">What is Osmotic Pressure?</div>
+
+  <div class="fbox">
+    <div class="main" style="font-size:15px; line-height:1.6;">
+      "The minimum external pressure that must be applied on a solution to prevent the entry of solvent into it through a semipermeable membrane"
+    </div>
+    <div class="note">In simple words: the pressure needed to STOP osmosis</div>
+  </div>
+
+  <div class="fbox fbox-blue">
+    <div class="main">π = CRT</div>
+    <div class="note">
+      π = Osmotic Pressure (atm or Pa)<br/>
+      C = Molar Concentration (mol L<sup>−1</sup>)<br/>
+      R = 0.0821 L·atm·mol<sup>−1</sup>·K<sup>−1</sup><br/>
+      T = Temperature in Kelvin<br/><br/>
+      <strong style="color:var(--gold);">For Electrolytes:</strong> π = iCRT &nbsp;&nbsp; (i = van't Hoff factor)
+    </div>
+  </div>
+
+  <div class="info-card">
+    <div class="ic-title">💡 Simple Idea — What is Osmosis?</div>
+    <p>
+      Imagine a <strong>semipermeable membrane</strong> like a net — it lets only <em>water molecules</em> pass through, not the dissolved particles (solute).<br/><br/>
+      Water always travels from a region of <strong>low solute concentration</strong> (lots of water) → to <strong>high solute concentration</strong> (less water).<br/><br/>
+      The pressure that builds up due to this water movement is called <strong>osmotic pressure (π)</strong>.
+    </p>
+  </div>
+
+  <div class="sec-title" style="margin-top:4px;">Three Types of Tonicity</div>
+
+  <div class="tonicity-card iso">
+    <div class="t-badge iso">⚖️ ISOTONIC</div>
+    <div class="t-title">Isotonic Solution</div>
+    <div class="t-desc">
+      <strong>Concentration outside = Concentration inside cell</strong><br/>
+      • No net movement of water<br/>
+      • RBC keeps its <strong>normal biconcave shape</strong><br/>
+      • Water enters and exits at equal rates<br/>
+      • Example: <strong>0.9% NaCl (Normal Saline)</strong> — used in IV drips<br/>
+      • Osmotic pressure of solution = osmotic pressure of cell
+    </div>
+  </div>
+
+  <div class="tonicity-card hyper">
+    <div class="t-badge hyper">📉 HYPERTONIC</div>
+    <div class="t-title">Hypertonic Solution</div>
+    <div class="t-desc">
+      <strong>Concentration outside > Concentration inside cell</strong><br/>
+      • Water moves <strong>OUT of the cell</strong> (exosmosis)<br/>
+      • RBC <strong>shrinks and becomes spiky</strong> — called <strong>crenation</strong><br/>
+      • Cell loses water to the surrounding solution<br/>
+      • Example: Seawater, 10% NaCl solution, Concentrated sugar<br/>
+      • Osmotic pressure outside > osmotic pressure of cell
+    </div>
+  </div>
+
+  <div class="tonicity-card hypo">
+    <div class="t-badge hypo">📈 HYPOTONIC</div>
+    <div class="t-title">Hypotonic Solution</div>
+    <div class="t-desc">
+      <strong>Concentration outside &lt; Concentration inside cell</strong><br/>
+      • Water moves <strong>INTO the cell</strong> (endosmosis)<br/>
+      • RBC <strong>swells</strong> and may burst — called <strong>haemolysis</strong><br/>
+      • Cell gains water from the surrounding solution<br/>
+      • Example: Distilled water, pure water<br/>
+      • Osmotic pressure outside &lt; osmotic pressure of cell
+    </div>
+  </div>
+
+  <div class="info-card" style="margin-top:4px;">
+    <div class="ic-title">🩸 Why Doctors Use 0.9% Saline for IV Drips</div>
+    <p>
+      Blood plasma is isotonic with 0.9% NaCl. If we use pure water (hypotonic), the RBCs would swell and burst. If we use too much salt (hypertonic), RBCs would shrink. So doctors always use <strong>isotonic saline</strong> — it matches the blood exactly and keeps cells safe!
+    </p>
+  </div>
+
+  <div class="tip-box">
+    <strong>📝 Board Exam Memory Trick:</strong><br/>
+    <strong>ISO</strong> = same (isobar, isotope — "same" in Greek)<br/>
+    <strong>HYPER</strong> = more/above (hypertension = high BP)<br/>
+    <strong>HYPO</strong> = less/below (hypothermia = low temp)<br/><br/>
+    Water always runs from HYPO → HYPER (from less to more solute)
+  </div>
+
+</div>
+</div>
+
+<!-- ══════════════ TAB 2: SIMULATE ══════════════ -->
+<div id="tab-simulate" class="tab-content">
+<div class="section">
+
+  <div class="sec-title">Interactive RBC Cell Simulation</div>
+  <p style="font-size:12px;color:#666;margin-bottom:12px;text-align:center;">Tap a solution below — watch the RBC cell react in real time!</p>
+
+  <div class="sol-selector">
+    <button class="sol-btn active-iso" id="btn-iso" onclick="setSolution('iso')">⚖️ Isotonic<br/><span style="font-size:10px;font-weight:600;opacity:0.8;">0.9% NaCl</span></button>
+    <button class="sol-btn" id="btn-hyper" onclick="setSolution('hyper')">📉 Hypertonic<br/><span style="font-size:10px;font-weight:600;opacity:0.8;">10% NaCl</span></button>
+    <button class="sol-btn" id="btn-hypo" onclick="setSolution('hypo')">📈 Hypotonic<br/><span style="font-size:10px;font-weight:600;opacity:0.8;">Distilled H₂O</span></button>
+  </div>
+
+  <div id="sim-canvas-wrap">
+    <canvas id="simCanvas" width="380" height="380"></canvas>
+  </div>
+
+  <div class="state-box iso" id="stateBox">
+    <div class="sb-title" id="stateTitle">⚖️ ISOTONIC — Cell is Normal</div>
+    <div id="stateDesc">
+      The solution concentration equals the cell's internal concentration. Water moves equally in both directions — <strong>no net change</strong> in cell size. The RBC keeps its healthy biconcave shape.
+    </div>
+  </div>
+
+  <div class="conc-section">
+    <div class="sec-title">Concentration Comparison</div>
+    <div class="conc-row">
+      <div class="conc-lbl">Inside Cell</div>
+      <div class="conc-track">
+        <div class="conc-fill" id="fillIn" style="width:50%; background:#1a7a4a;"></div>
+      </div>
+      <div class="conc-val" id="valIn">0.9%</div>
+    </div>
+    <div class="conc-row">
+      <div class="conc-lbl">Outside (Solution)</div>
+      <div class="conc-track">
+        <div class="conc-fill" id="fillOut" style="width:50%; background:#1565c0;"></div>
+      </div>
+      <div class="conc-val" id="valOut">0.9%</div>
+    </div>
+    <div class="conc-row">
+      <div class="conc-lbl">Net Water Flow</div>
+      <div class="conc-track">
+        <div class="conc-fill" id="fillFlow" style="width:50%; background:#c8a84b;"></div>
+      </div>
+      <div class="conc-val" id="valFlow">None</div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ══════════════ TAB 3: COMPARE ══════════════ -->
+<div id="tab-compare" class="tab-content">
+<div class="section">
+
+  <div class="sec-title">Comparison Chart</div>
+  <canvas id="graphCanvas" width="380" height="280"></canvas>
+  <div class="graph-legend">
+    <div class="leg-item"><div class="leg-dot" style="background:#1a7a4a;"></div> Isotonic (0.9%)</div>
+    <div class="leg-item"><div class="leg-dot" style="background:#c0392b;"></div> Hypertonic (10%)</div>
+    <div class="leg-item"><div class="leg-dot" style="background:#1565c0;"></div> Hypotonic (0%)</div>
+    <div class="leg-item"><div class="leg-dot" style="background:#c8a84b; border:2px dashed #0a1628;"></div> Cell Conc. (0.9%)</div>
+  </div>
+
+  <div class="sec-title">Full Comparison Table</div>
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Property</th>
+        <th style="color:#90ee90;">Isotonic</th>
+        <th style="color:#ff9999;">Hypertonic</th>
+        <th style="color:#87ceeb;">Hypotonic</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-weight:800;text-align:left;padding-left:10px;">Conc. (outside)</td>
+        <td>= Cell</td>
+        <td>&gt; Cell</td>
+        <td>&lt; Cell</td>
+      </tr>
+      <tr>
+        <td style="font-weight:800;text-align:left;padding-left:10px;">Water Flow</td>
+        <td>None (equal)</td>
+        <td>OUT of cell</td>
+        <td>INTO cell</td>
+      </tr>
+      <tr>
+        <td style="font-weight:800;text-align:left;padding-left:10px;">Osmosis Type</td>
+        <td>Equilibrium</td>
+        <td>Exosmosis</td>
+        <td>Endosmosis</td>
+      </tr>
+      <tr>
+        <td style="font-weight:800;text-align:left;padding-left:10px;">RBC Effect</td>
+        <td>Normal</td>
+        <td>Shrinks</td>
+        <td>Swells/Bursts</td>
+      </tr>
+      <tr>
+        <td style="font-weight:800;text-align:left;padding-left:10px;">Technical Name</td>
+        <td>—</td>
+        <td>Crenation</td>
+        <td>Haemolysis</td>
+      </tr>
+      <tr>
+        <td style="font-weight:800;text-align:left;padding-left:10px;">Example</td>
+        <td>0.9% NaCl</td>
+        <td>Seawater</td>
+        <td>Distilled H₂O</td>
+      </tr>
+      <tr>
+        <td style="font-weight:800;text-align:left;padding-left:10px;">Osmotic Pressure</td>
+        <td>π<sub>out</sub> = π<sub>in</sub></td>
+        <td>π<sub>out</sub> &gt; π<sub>in</sub></td>
+        <td>π<sub>out</sub> &lt; π<sub>in</sub></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="tip-box" style="margin-top:4px;">
+    <strong>🌊 Real-Life Analogy:</strong><br/>
+    Think of osmotic pressure like water flowing downhill. The "hill" is solute concentration — water always flows from the low side (dilute) to the high side (concentrated). The more concentrated the outside solution, the more the cell loses water — and the more it shrinks!
+  </div>
+
+</div>
+</div>
+
+<!-- ══════════════ TAB 4: SYMBOLS ══════════════ -->
+<div id="tab-symbols" class="tab-content">
+<div class="section">
+
+  <div class="sec-title">Symbols & Definitions</div>
+
+  <table class="sym-table">
+    <thead>
+      <tr>
+        <th>Symbol</th>
+        <th>Full Name</th>
+        <th>Simple Meaning</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>π</td>
+        <td>Osmotic Pressure</td>
+        <td>Pressure needed to stop osmosis (in atm or Pa)</td>
+      </tr>
+      <tr>
+        <td>C</td>
+        <td>Molar Concentration</td>
+        <td>How many moles of solute per litre of solution (mol/L)</td>
+      </tr>
+      <tr>
+        <td>R</td>
+        <td>Gas Constant</td>
+        <td>0.0821 L·atm·mol<sup>−1</sup>·K<sup>−1</sup> — a universal fixed number</td>
+      </tr>
+      <tr>
+        <td>T</td>
+        <td>Temperature</td>
+        <td>Temperature in Kelvin (T = °C + 273)</td>
+      </tr>
+      <tr>
+        <td>i</td>
+        <td>van't Hoff Factor</td>
+        <td>Number of particles one formula unit gives when dissolved<br/>(NaCl → Na<sup>+</sup> + Cl<sup>−</sup>, so i = 2)</td>
+      </tr>
+      <tr>
+        <td>SPM</td>
+        <td>Semipermeable Membrane</td>
+        <td>A membrane that allows ONLY solvent (water) to pass, not solute</td>
+      </tr>
+      <tr>
+        <td>π<sub>out</sub></td>
+        <td>Osmotic Pressure (outside)</td>
+        <td>Osmotic pressure of the external solution</td>
+      </tr>
+      <tr>
+        <td>π<sub>in</sub></td>
+        <td>Osmotic Pressure (inside)</td>
+        <td>Osmotic pressure of the cell fluid (≈ 0.9% NaCl for RBC)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="fbox fbox-blue" style="margin-bottom:12px;">
+    <div class="main" style="font-size:14px;">Van't Hoff Equation</div>
+    <div class="note">
+      π = iCRT<br/><br/>
+      NaCl → i = 2 &nbsp;|&nbsp; CaCl<sub>2</sub> → i = 3<br/>
+      Glucose (non-electrolyte) → i = 1
+    </div>
+  </div>
+
+  <div class="info-card">
+    <div class="ic-title">🧠 Memory Trick for Tonicity</div>
+    <p>
+      <strong>ISO</strong>tonic = <em>ISO</em>bar/ISOperimeter → SAME<br/>
+      <strong>HYPER</strong>tonic = <em>HYPER</em>active → MORE than normal<br/>
+      <strong>HYPO</strong>tonic = <em>HYPO</em>thermic → LESS than normal<br/><br/>
+      <strong>"Water follows the crowd"</strong> — water always moves toward where there are MORE solute particles (higher concentration), just like people follow a crowd!
+    </p>
+  </div>
+
+  <div class="tip-box">
+    <strong>📋 Colligative Property:</strong><br/>
+    Osmotic pressure is a colligative property — it depends only on the <strong>number</strong> of solute particles, not on the nature (identity) of the solute. More particles = higher osmotic pressure.
+  </div>
+
+</div>
+</div>
+
+<!-- ══════════════ TAB 5: QUIZ ══════════════ -->
+<div id="tab-quiz" class="tab-content">
+<div class="section">
+  <div class="sec-title">Test Yourself — 8 Questions</div>
+  <div id="quizArea"></div>
+  <div class="score-box" id="scoreBox">
+    <div style="font-size:32px;">🎉</div>
+    <div class="score-big" id="scoreBig"></div>
+    <div class="score-msg" id="scoreMsg"></div>
+    <button class="btn-restart" onclick="startQuiz()">🔄 Try Again</button>
+  </div>
+</div>
+</div>
+
+<!-- TERMS OF USE SECTION -->
+<div style="background:#0d1f3c;padding:14px 16px;border-top:2px solid rgba(200,168,75,0.3);">
+  <details style="cursor:pointer;">
+    <summary style="color:var(--gold);font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;list-style:none;">
+      ⚖️ Terms of Use & Legal Notice (tap to read)
+    </summary>
+    <div style="margin-top:12px;font-size:11px;color:rgba(255,255,255,0.7);line-height:1.9;">
+      <strong style="color:var(--gold);">Permitted Use:</strong> Personal study and learning by the intended student audience only.<br/>
+      <strong style="color:var(--gold);">Not Permitted:</strong> Redistribution, resale, modification, screen recording for commercial use, or claiming authorship of this content in any form.<br/>
+      <strong style="color:var(--gold);">Copyright:</strong> All content, code, visuals, animations, quiz questions, and explanations in this simulation are the exclusive intellectual property of Jitesh Salve, protected under the Indian Copyright Act, 1957.<br/>
+      <strong style="color:var(--gold);">Violations:</strong> Sharing this file without the creator's written consent is a copyright violation. Legal action may be taken against any individual or entity found misusing this content.<br/>
+      <strong style="color:var(--gold);">Disclaimer:</strong> This simulation is for educational reference only. While every effort is made for accuracy, the creator is not responsible for errors or omissions.<br/>
+      <strong style="color:var(--gold);">Contact:</strong> For permissions, licensing, or queries, contact the creator directly through official channels.
+    </div>
+  </details>
+</div>
+
+<div class="footer">
+  <strong>© 2026 Jitesh Salve Chemistry Simulations</strong>
+  As per Maharashtra HSC Board Syllabus | Interactive Simulation | Version 1.0 · Created: 2026<br/>
+  Unauthorised copying, redistribution or modification is strictly prohibited · All Rights Reserved<br/><br/>
+  <span style="font-size:10px; opacity:0.8;">
+    This simulation is currently made available at no charge as a complimentary educational resource.
+    The creator reserves the right to introduce a subscription or paid access model in the future without prior notice.
+    Continued use after such change constitutes acceptance of the revised terms.
+  </span><br/><br/>
+  <span style="font-size:10px; opacity:0.7;">
+    This is a personal educational initiative by Jitesh Salve and is not affiliated with, endorsed by,
+    or representative of any government institution, college, or the Maharashtra State Board of Secondary
+    and Higher Secondary Education. | Sharing without written consent of the creator violates the Indian Copyright Act, 1957.
+  </span>
+</div>
+
+<script>
+// ══════════ CONTENT PROTECTION ══════════
+document.addEventListener('contextmenu', function(e) { e.preventDefault(); return false; });
+document.addEventListener('keydown', function(e) {
+  if ((e.ctrlKey && ['s','u','S','U'].includes(e.key)) ||
+      (e.ctrlKey && e.shiftKey && ['I','i','J','j','C','c'].includes(e.key)) ||
+      e.key === 'F12') {
+    e.preventDefault(); return false;
+  }
+});
+
+// ══════════ TAB SWITCHING ══════════
+function showTab(name, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+  if (name === 'compare') { drawCompareGraph(); }
+}
+
+// ══════════ SIMULATION ══════════
+var currentSol = 'iso';
+var animFrame = null;
+var time = 0;
+var targetCellR = 80;
+var currentCellR = 80;
+
+var solData = {
+  iso: {
+    label: 'ISOTONIC',
+    bg1: '#b2ebf2', bg2: '#80deea',
+    conc: 0.9, concOut: 0.9,
+    waterColor: 'rgba(30,136,229,0.55)',
+    arrowsIn: true, arrowsOut: true,
+    arrowBalance: 0, // 0 = equal, 1 = mostly in, -1 = mostly out
+    cellR: 80,
+    cellFill1: '#ff6b6b', cellFill2: '#c0392b', cellFill3: '#7b241c',
+    stateClass: 'iso',
+    title: '⚖️ ISOTONIC — Cell is Normal',
+    desc: 'The solution concentration equals the cell\'s internal concentration. Water moves equally in both directions — <strong>no net change</strong> in cell size. The RBC keeps its healthy biconcave shape.',
+    flowLabel: 'None (Balanced)',
+    flowWidth: 50, flowColor: '#c8a84b',
+    shape: 'normal'
+  },
+  hyper: {
+    label: 'HYPERTONIC',
+    bg1: '#ffcdd2', bg2: '#ef9a9a',
+    conc: 0.9, concOut: 10,
+    waterColor: 'rgba(183,28,28,0.4)',
+    arrowBalance: -1,
+    cellR: 50,
+    cellFill1: '#e57373', cellFill2: '#b71c1c', cellFill3: '#6d1111',
+    stateClass: 'hyper',
+    title: '📉 HYPERTONIC — Cell is Shrinking (Crenation)',
+    desc: 'Outside concentration is HIGHER. Water exits the cell by exosmosis. The RBC loses water, <strong>shrinks</strong> and becomes spiky — this is called <strong>crenation</strong>.',
+    flowLabel: 'OUT of cell',
+    flowWidth: 80, flowColor: '#c0392b',
+    shape: 'spiky'
+  },
+  hypo: {
+    label: 'HYPOTONIC',
+    bg1: '#bbdefb', bg2: '#90caf9',
+    conc: 0.9, concOut: 0,
+    waterColor: 'rgba(21,101,192,0.5)',
+    arrowBalance: 1,
+    cellR: 120,
+    cellFill1: '#ff8a80', cellFill2: '#ff5252', cellFill3: '#d32f2f',
+    stateClass: 'hypo',
+    title: '📈 HYPOTONIC — Cell is Swelling (Haemolysis Risk)',
+    desc: 'Outside concentration is LOWER (pure water). Water enters the cell by endosmosis. The RBC <strong>swells</strong> and can burst — this is called <strong>haemolysis</strong>.',
+    flowLabel: 'INTO cell',
+    flowWidth: 80, flowColor: '#1565c0',
+    shape: 'swollen'
+  }
+};
+
+// Water particle pool
+var particles = [];
+for (var i = 0; i < 30; i++) {
+  particles.push({
+    x: Math.random() * 380,
+    y: Math.random() * 380,
+    vx: (Math.random() - 0.5) * 1.2,
+    vy: (Math.random() - 0.5) * 1.2,
+    r: 3 + Math.random() * 3,
+    phase: Math.random() * Math.PI * 2,
+    isInside: false
+  });
+}
+
+function setSolution(sol) {
+  currentSol = sol;
+  ['iso','hyper','hypo'].forEach(function(s) {
+    var btn = document.getElementById('btn-' + s);
+    btn.className = 'sol-btn' + (s === sol ? ' active-' + s : '');
+  });
+  var d = solData[sol];
+  targetCellR = d.cellR;
+
+  // Update state box
+  var sb = document.getElementById('stateBox');
+  sb.className = 'state-box ' + d.stateClass;
+  document.getElementById('stateTitle').innerHTML = d.title;
+  document.getElementById('stateDesc').innerHTML = d.desc;
+
+  // Update bars
+  var inPct = 50;
+  var outPct = sol === 'hyper' ? 90 : sol === 'hypo' ? 5 : 50;
+  document.getElementById('fillIn').style.width = inPct + '%';
+  document.getElementById('fillIn').style.background = '#1a7a4a';
+  document.getElementById('fillOut').style.width = outPct + '%';
+  document.getElementById('fillOut').style.background = sol === 'hyper' ? '#c0392b' : sol === 'hypo' ? '#1565c0' : '#1a7a4a';
+  document.getElementById('valIn').textContent = '0.9% NaCl';
+  document.getElementById('valOut').textContent = sol === 'hyper' ? '10% NaCl' : sol === 'hypo' ? '~0% (H₂O)' : '0.9% NaCl';
+  document.getElementById('fillFlow').style.width = d.flowWidth + '%';
+  document.getElementById('fillFlow').style.background = d.flowColor;
+  document.getElementById('valFlow').textContent = d.flowLabel;
+
+  // Redistribute particles
+  particles.forEach(function(p) {
+    p.x = Math.random() * 380;
+    p.y = Math.random() * 380;
+    p.isInside = false;
+  });
+}
+
+function drawSim() {
+  var canvas = document.getElementById('simCanvas');
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var W = 380, H = 380, cx = W/2, cy = H/2;
+  var d = solData[currentSol];
+
+  // Smooth cell radius
+  currentCellR += (targetCellR - currentCellR) * 0.04;
+  time += 0.018;
+
+  ctx.clearRect(0, 0, W, H);
+
+  // Background (solution)
+  var bgGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, W/1.3);
+  bgGrad.addColorStop(0, d.bg1);
+  bgGrad.addColorStop(1, d.bg2);
+  ctx.fillStyle = bgGrad;
+  ctx.beginPath();
+  ctx.roundRect ? ctx.roundRect(0, 0, W, H, 16) : ctx.rect(0, 0, W, H);
+  ctx.fill();
+
+  // Draw solute dots in solution (outside cell)
+  var numSolute = currentSol === 'hyper' ? 28 : currentSol === 'iso' ? 10 : 2;
+  // use seeded positions
+  var solutePositions = [];
+  for (var s = 0; s < 60; s++) {
+    var sx = ((s * 97 + 31) % 330) + 25;
+    var sy = ((s * 71 + 53) % 330) + 25;
+    var distFromCenter = Math.sqrt((sx - cx) * (sx - cx) + (sy - cy) * (sy - cy));
+    if (distFromCenter > currentCellR + 12) {
+      solutePositions.push({x: sx, y: sy});
+    }
+  }
+  for (var si = 0; si < Math.min(numSolute, solutePositions.length); si++) {
+    ctx.beginPath();
+    ctx.arc(solutePositions[si].x, solutePositions[si].y, 5, 0, Math.PI * 2);
+    ctx.fillStyle = currentSol === 'hyper' ? 'rgba(183,28,28,0.5)' : 'rgba(10,22,40,0.25)';
+    ctx.fill();
+    // tiny label
+    ctx.fillStyle = currentSol === 'hyper' ? 'rgba(183,28,28,0.7)' : 'rgba(10,22,40,0.4)';
+    ctx.font = 'bold 8px Segoe UI';
+    ctx.textAlign = 'center';
+    ctx.fillText(currentSol === 'hyper' ? 'Na' : '·', solutePositions[si].x, solutePositions[si].y + 3);
+  }
+
+  // Semipermeable membrane ring
+  ctx.beginPath();
+  ctx.arc(cx, cy, currentCellR + 8, 0, Math.PI * 2);
+  ctx.strokeStyle = 'rgba(200,168,75,0.6)';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([6, 4]);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // SPM label
+  ctx.fillStyle = 'rgba(200,168,75,0.85)';
+  ctx.font = 'bold 8px Segoe UI';
+  ctx.textAlign = 'center';
+  ctx.fillText('Semipermeable Membrane', cx, cy - currentCellR - 14);
+
+  // Water flow arrows
+  var ab = d.arrowBalance;
+  var arrowCount = 6;
+  for (var ai = 0; ai < arrowCount; ai++) {
+    var angle = (ai / arrowCount) * Math.PI * 2 + time * 0.3;
+    var innerR = currentCellR + 20;
+    var outerR = currentCellR + 50;
+    var ax, ay, tx, ty;
+
+    if (ab === 0) {
+      // equal flow both ways — alternate
+      if (ai % 2 === 0) {
+        ax = cx + Math.cos(angle) * outerR;
+        ay = cy + Math.sin(angle) * outerR;
+        tx = cx + Math.cos(angle) * innerR;
+        ty = cy + Math.sin(angle) * innerR;
+      } else {
+        ax = cx + Math.cos(angle) * innerR;
+        ay = cy + Math.sin(angle) * innerR;
+        tx = cx + Math.cos(angle) * outerR;
+        ty = cy + Math.sin(angle) * outerR;
+      }
+      drawFlowArrow(ctx, ax, ay, tx, ty, 'rgba(26,122,74,0.7)');
+    } else if (ab === -1) {
+      // water exits — arrows go outward
+      ax = cx + Math.cos(angle) * innerR;
+      ay = cy + Math.sin(angle) * innerR;
+      tx = cx + Math.cos(angle) * outerR;
+      ty = cy + Math.sin(angle) * outerR;
+      var alpha = 0.5 + 0.5 * Math.sin(time * 2 + ai);
+      drawFlowArrow(ctx, ax, ay, tx, ty, 'rgba(192,57,43,' + alpha.toFixed(2) + ')');
+    } else {
+      // water enters — arrows go inward
+      ax = cx + Math.cos(angle) * outerR;
+      ay = cy + Math.sin(angle) * outerR;
+      tx = cx + Math.cos(angle) * innerR;
+      ty = cy + Math.sin(angle) * innerR;
+      var alpha2 = 0.5 + 0.5 * Math.sin(time * 2 + ai);
+      drawFlowArrow(ctx, ax, ay, tx, ty, 'rgba(21,101,192,' + alpha2.toFixed(2) + ')');
+    }
+  }
+
+  // Draw RBC Cell
+  drawRBC(ctx, cx, cy, currentCellR, d, time);
+
+  // Water molecules animation
+  particles.forEach(function(p) {
+    // Drift toward cell if hypotonic, away if hypertonic, random if iso
+    var dx = cx - p.x, dy = cy - p.y;
+    var dist = Math.sqrt(dx*dx + dy*dy);
+    if (currentSol === 'hypo' && dist > currentCellR + 10) {
+      p.vx += dx / dist * 0.04;
+      p.vy += dy / dist * 0.04;
+    } else if (currentSol === 'hyper' && dist < currentCellR + 30) {
+      p.vx -= dx / dist * 0.04;
+      p.vy -= dy / dist * 0.04;
+    }
+    p.vx *= 0.98;
+    p.vy *= 0.98;
+    p.vx += (Math.random() - 0.5) * 0.3;
+    p.vy += (Math.random() - 0.5) * 0.3;
+    p.x += p.vx;
+    p.y += p.vy;
+    // bounce walls
+    if (p.x < 5 || p.x > W - 5) p.vx *= -1;
+    if (p.y < 5 || p.y > H - 5) p.vy *= -1;
+    p.x = Math.max(5, Math.min(W-5, p.x));
+    p.y = Math.max(5, Math.min(H-5, p.y));
+
+    // Only draw if outside cell
+    var pdist = Math.sqrt((p.x-cx)*(p.x-cx)+(p.y-cy)*(p.y-cy));
+    if (pdist > currentCellR + 8) {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = d.waterColor;
+      ctx.fill();
+      // H2O label on some
+      if (p.r > 4.5) {
+        ctx.fillStyle = 'rgba(255,255,255,0.9)';
+        ctx.font = 'bold 6px Segoe UI';
+        ctx.textAlign = 'center';
+        ctx.fillText('H\u2082O', p.x, p.y + 2);
+      }
+    }
+  });
+
+  // Watermark
+  ctx.save();
+  ctx.globalAlpha = 0.12;
+  ctx.fillStyle = '#0a1628';
+  ctx.font = 'bold 11px Segoe UI';
+  ctx.textAlign = 'center';
+  ctx.fillText('© 2026 Jitesh Salve', cx, H - 10);
+  ctx.restore();
+
+  // State label bottom
+  ctx.fillStyle = 'rgba(10,22,40,0.7)';
+  ctx.font = 'bold 11px Segoe UI';
+  ctx.textAlign = 'center';
+  var stateLabels = {iso:'ISOTONIC — Normal', hyper:'HYPERTONIC — Crenation', hypo:'HYPOTONIC — Haemolysis'};
+  ctx.fillText(stateLabels[currentSol], cx, H - 12);
+
+  animFrame = requestAnimationFrame(drawSim);
+}
+
+function drawFlowArrow(ctx, x1, y1, x2, y2, color) {
+  var dx = x2 - x1, dy = y2 - y1;
+  var len = Math.sqrt(dx*dx + dy*dy);
+  var ux = dx/len, uy = dy/len;
+  ctx.beginPath();
+  ctx.moveTo(x1, y1);
+  ctx.lineTo(x2, y2);
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  // arrowhead
+  var hx = x2 - ux * 8, hy = y2 - uy * 8;
+  ctx.beginPath();
+  ctx.moveTo(x2, y2);
+  ctx.lineTo(hx - uy * 5, hy + ux * 5);
+  ctx.lineTo(hx + uy * 5, hy - ux * 5);
+  ctx.closePath();
+  ctx.fillStyle = color;
+  ctx.fill();
+}
+
+function drawRBC(ctx, cx, cy, r, d, t) {
+  if (d.shape === 'spiky') {
+    // Spiky / crenated cell
+    var spikes = 14;
+    ctx.beginPath();
+    for (var k = 0; k <= spikes * 2; k++) {
+      var angle = (k / (spikes * 2)) * Math.PI * 2;
+      var rad = k % 2 === 0 ? r : r * 0.72;
+      var px = cx + Math.cos(angle) * rad;
+      var py = cy + Math.sin(angle) * rad;
+      k === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+    }
+    ctx.closePath();
+  } else if (d.shape === 'swollen') {
+    // Large round swollen cell — also wobble
+    ctx.beginPath();
+    var wobble = Math.sin(t * 2) * 4;
+    ctx.ellipse(cx, cy, r + wobble, r - wobble * 0.5, 0, 0, Math.PI * 2);
+  } else {
+    // Normal biconcave — slightly oval
+    ctx.beginPath();
+    ctx.ellipse(cx, cy, r, r * 0.85, 0, 0, Math.PI * 2);
+  }
+
+  // Cell gradient fill
+  var cGrad = ctx.createRadialGradient(cx - r*0.25, cy - r*0.25, r*0.05, cx, cy, r);
+  cGrad.addColorStop(0, d.cellFill1);
+  cGrad.addColorStop(0.6, d.cellFill2);
+  cGrad.addColorStop(1, d.cellFill3);
+  ctx.fillStyle = cGrad;
+  ctx.fill();
+
+  // Cell border
+  ctx.strokeStyle = 'rgba(255,255,255,0.35)';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // Highlight
+  ctx.beginPath();
+  ctx.ellipse(cx - r*0.25, cy - r*0.25, r * 0.22, r * 0.13, -0.5, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(255,255,255,0.3)';
+  ctx.fill();
+
+  // Biconcave indent for normal shape
+  if (d.shape === 'normal') {
+    ctx.beginPath();
+    ctx.ellipse(cx, cy, r * 0.35, r * 0.22, 0, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(150,0,0,0.25)';
+    ctx.fill();
+  }
+
+  // Cell label
+  ctx.fillStyle = 'rgba(255,255,255,0.9)';
+  ctx.font = 'bold ' + Math.max(10, r * 0.17) + 'px Segoe UI';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('RBC', cx, cy);
+  ctx.textBaseline = 'alphabetic';
+}
+
+// ══════════ COMPARE GRAPH ══════════
+function drawCompareGraph() {
+  var canvas = document.getElementById('graphCanvas');
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var W = 380, H = 280;
+  ctx.clearRect(0, 0, W, H);
+
+  // Background
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(0, 0, W, H);
+
+  var pad = {l: 50, r: 20, t: 30, b: 50};
+  var gW = W - pad.l - pad.r;
+  var gH = H - pad.t - pad.b;
+
+  // Grid
+  ctx.strokeStyle = '#e8ecf0';
+  ctx.lineWidth = 1;
+  for (var gi = 0; gi <= 5; gi++) {
+    var gy = pad.t + (gi / 5) * gH;
+    ctx.beginPath();
+    ctx.moveTo(pad.l, gy);
+    ctx.lineTo(W - pad.r, gy);
+    ctx.stroke();
+    ctx.fillStyle = '#999';
+    ctx.font = '9px Segoe UI';
+    ctx.textAlign = 'right';
+    ctx.fillText(((5 - gi) * 2) + '%', pad.l - 5, gy + 3);
+  }
+
+  // Axes
+  ctx.strokeStyle = '#ccc';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(pad.l, pad.t);
+  ctx.lineTo(pad.l, pad.t + gH);
+  ctx.lineTo(pad.l + gW, pad.t + gH);
+  ctx.stroke();
+
+  // Y axis label
+  ctx.save();
+  ctx.translate(13, pad.t + gH / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillStyle = '#555';
+  ctx.font = 'bold 10px Segoe UI';
+  ctx.textAlign = 'center';
+  ctx.fillText('Concentration (%)', 0, 0);
+  ctx.restore();
+
+  // X axis label
+  ctx.fillStyle = '#555';
+  ctx.font = 'bold 10px Segoe UI';
+  ctx.textAlign = 'center';
+  ctx.fillText('Solution Type', pad.l + gW / 2, H - 8);
+
+  var bars = [
+    {label: 'Isotonic\n(0.9% NaCl)', val: 0.9, color: '#1a7a4a'},
+    {label: 'Hypertonic\n(10% NaCl)', val: 10, color: '#c0392b'},
+    {label: 'Hypotonic\n(Dist. H2O)', val: 0, color: '#1565c0'}
+  ];
+
+  var barW = gW / 5;
+  var maxVal = 10;
+
+  bars.forEach(function(b, bi) {
+    var bx = pad.l + (bi + 0.5) * (gW / bars.length) + (gW / bars.length - barW) / 2;
+    var bh = (b.val / maxVal) * gH;
+    var by = pad.t + gH - bh;
+
+    // Shadow
+    ctx.shadowColor = 'rgba(0,0,0,0.15)';
+    ctx.shadowBlur = 4;
+    ctx.fillStyle = b.color;
+    ctx.beginPath();
+    if (ctx.roundRect) {
+      ctx.roundRect(bx, by, barW, bh, [4, 4, 0, 0]);
+    } else {
+      ctx.rect(bx, by, barW, bh);
+    }
+    ctx.fill();
+    ctx.shadowBlur = 0;
+
+    // Value on top
+    ctx.fillStyle = b.color;
+    ctx.font = 'bold 11px Segoe UI';
+    ctx.textAlign = 'center';
+    ctx.fillText(b.val + '%', bx + barW / 2, by - 5);
+
+    // X labels
+    ctx.fillStyle = '#333';
+    ctx.font = 'bold 9px Segoe UI';
+    var lines = b.label.split('\n');
+    lines.forEach(function(line, li) {
+      ctx.fillText(line, bx + barW / 2, pad.t + gH + 14 + li * 11);
+    });
+  });
+
+  // Cell concentration line (dashed)
+  var cellY = pad.t + gH - (0.9 / maxVal) * gH;
+  ctx.beginPath();
+  ctx.moveTo(pad.l, cellY);
+  ctx.lineTo(pad.l + gW, cellY);
+  ctx.strokeStyle = '#c8a84b';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([6, 4]);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#c8a84b';
+  ctx.font = 'bold 9px Segoe UI';
+  ctx.textAlign = 'left';
+  ctx.fillText('RBC conc. (0.9%)', pad.l + 4, cellY - 4);
+
+  // Watermark
+  ctx.globalAlpha = 0.1;
+  ctx.fillStyle = '#0a1628';
+  ctx.font = 'bold 13px Segoe UI';
+  ctx.textAlign = 'center';
+  ctx.fillText('© 2026 Jitesh Salve', W / 2, H / 2);
+  ctx.globalAlpha = 1;
+}
+
+// ══════════ QUIZ ══════════
+var quizData = [
+  {
+    q: 'What is the formula for osmotic pressure?',
+    opts: ['π = PV/T', 'π = CRT', 'π = nRT/V', 'π = ΔTb × Kb'],
+    ans: 1,
+    fb: 'Correct! π = CRT where C = concentration, R = gas constant, T = temperature in Kelvin. For electrolytes: π = iCRT.'
+  },
+  {
+    q: 'An RBC placed in 10% NaCl solution will:',
+    opts: ['Swell and burst', 'Remain unchanged', 'Shrink (crenation)', 'Dissolve completely'],
+    ans: 2,
+    fb: 'Correct! 10% NaCl is hypertonic. Water exits the RBC, causing it to shrink — this is called crenation.'
+  },
+  {
+    q: 'What happens to an RBC placed in distilled water?',
+    opts: ['Crenation occurs', 'Cell stays normal', 'Cell dissolves', 'Haemolysis (cell bursts)'],
+    ans: 3,
+    fb: 'Correct! Distilled water is hypotonic. Water rushes into the RBC, it swells and bursts — called haemolysis.'
+  },
+  {
+    q: 'Which solution is used in IV drips (intravenous) for patients?',
+    opts: ['Pure distilled water', '0.9% NaCl (Normal saline)', '10% glucose', 'Seawater'],
+    ans: 1,
+    fb: 'Correct! 0.9% NaCl is isotonic with blood plasma. It keeps RBCs safe by maintaining their normal shape and size.'
+  },
+  {
+    q: 'Osmotic pressure is a _______ property.',
+    opts: ['Additive', 'Constitutive', 'Colligative', 'Intensive'],
+    ans: 2,
+    fb: 'Correct! Osmotic pressure is a colligative property — it depends only on the NUMBER of solute particles, not their identity.'
+  },
+  {
+    q: 'What is "exosmosis"?',
+    opts: ['Water moving INTO a cell', 'Water moving OUT of a cell', 'Solute moving through membrane', 'Pressure applied to stop osmosis'],
+    ans: 1,
+    fb: 'Correct! Exosmosis = water moving OUT of the cell. This happens in hypertonic solutions.'
+  },
+  {
+    q: 'For NaCl dissolved in water, what is the van\'t Hoff factor (i)?',
+    opts: ['i = 1', 'i = 2', 'i = 3', 'i = 0.5'],
+    ans: 1,
+    fb: 'Correct! NaCl → Na⁺ + Cl⁻, giving 2 ions per formula unit. So i = 2, and π = iCRT = 2CRT.'
+  },
+  {
+    q: 'Which term describes a solution with LOWER concentration than the cell?',
+    opts: ['Hypertonic', 'Isotonic', 'Hypotonic', 'Colligative'],
+    ans: 2,
+    fb: 'Correct! HYPO = less/below. Hypotonic solution has lower solute concentration than inside the cell, so water enters the cell.'
+  }
+];
+
+var qIdx = 0, score = 0;
+
+function startQuiz() {
+  qIdx = 0; score = 0;
+  document.getElementById('scoreBox').style.display = 'none';
+  document.getElementById('quizArea').innerHTML = '';
+  renderQuestion();
+}
+
+function renderQuestion() {
+  if (qIdx >= quizData.length) { showScore(); return; }
+  var q = quizData[qIdx];
+  var html = '<div class="quiz-card">';
+  html += '<div class="q-num">QUESTION ' + (qIdx + 1) + ' OF ' + quizData.length + '</div>';
+  html += '<div class="q-text">' + q.q + '</div>';
+  html += '<div class="q-opts">';
+  q.opts.forEach(function(opt, oi) {
+    html += '<button class="q-opt" id="opt' + oi + '" onclick="checkAns(' + oi + ')">' + opt + '</button>';
+  });
+  html += '</div>';
+  html += '<div class="q-fb" id="qfb"></div>';
+  html += '<button class="btn-next" id="btnNext" onclick="nextQ()">Next Question →</button>';
+  html += '</div>';
+  document.getElementById('quizArea').innerHTML = html;
+}
+
+function checkAns(chosen) {
+  var q = quizData[qIdx];
+  document.querySelectorAll('.q-opt').forEach(function(b) { b.disabled = true; });
+  var fb = document.getElementById('qfb');
+  if (chosen === q.ans) {
+    score++;
+    document.getElementById('opt' + chosen).classList.add('correct');
+    fb.innerHTML = '✅ ' + q.fb;
+    fb.className = 'q-fb show ok';
+  } else {
+    document.getElementById('opt' + chosen).classList.add('wrong');
+    document.getElementById('opt' + q.ans).classList.add('correct');
+    fb.innerHTML = '❌ Wrong. The correct answer is: <strong>' + q.opts[q.ans] + '</strong>. ' + q.fb;
+    fb.className = 'q-fb show no';
+  }
+  document.getElementById('btnNext').style.display = 'block';
+}
+
+function nextQ() {
+  qIdx++;
+  renderQuestion();
+}
+
+function showScore() {
+  document.getElementById('quizArea').innerHTML = '';
+  var sb = document.getElementById('scoreBox');
+  sb.style.display = 'block';
+  document.getElementById('scoreBig').textContent = score + ' / ' + quizData.length;
+  var pct = (score / quizData.length) * 100;
+  var msg;
+  if (pct === 100) msg = '🎉 Perfect score! Excellent understanding of osmotic pressure!';
+  else if (pct >= 75) msg = '👏 Very good! Review the questions you missed.';
+  else if (pct >= 50) msg = '📖 Good effort! Study the concept tab again and retry.';
+  else msg = '💪 Keep practising! Read the concept tab carefully and try again.';
+  document.getElementById('scoreMsg').textContent = msg;
+}
+
+// ══════════ INIT ══════════
+window.onload = function() {
+  startQuiz();
+  setSolution('iso');
+  drawSim();
+};
+</script>
+</body>
+</html>

@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>Relative Lowering of Vapour Pressure | © Jitesh Salve</title>
+<style>
+  :root {
+    --navy: #0a1628;
+    --navy2: #112240;
+    --gold: #c8a84b;
+    --gold2: #e8c96b;
+    --red: #c0392b;
+    --green: #1a7a4a;
+    --light: #f4f6fb;
+    --white: #ffffff;
+    --text: #1a2340;
+    --muted: #5a6a8a;
+    --border: #dde4f0;
+    --card: #ffffff;
+    --accent: #2563eb;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--light); font-family: 'Segoe UI', Arial, sans-serif; color: var(--text); font-size: 14px; }
+
+  /* TOP WATERMARK BAR */
+  .top-bar {
+    background: var(--navy);
+    color: var(--gold);
+    text-align: center;
+    padding: 7px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, var(--navy) 0%, #1a3560 60%, #0a2a4a 100%);
+    color: white;
+    padding: 22px 16px 18px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; top: -30px; right: -30px;
+    width: 150px; height: 150px;
+    border-radius: 50%;
+    background: rgba(200,168,75,0.10);
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(200,168,75,0.18);
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-bottom: 9px;
+    text-transform: uppercase;
+  }
+  .hero h1 { font-size: 20px; font-weight: 800; line-height: 1.3; margin-bottom: 5px; }
+  .hero h1 span { color: var(--gold); }
+  .hero-sub { font-size: 12px; color: rgba(255,255,255,0.72); margin-bottom: 4px; }
+  .hero-tag { font-size: 11px; color: var(--gold); font-style: italic; }
+
+  /* TABS */
+  .tab-bar-wrap { background: var(--navy); position: sticky; top: 0; z-index: 100; overflow-x: auto; -webkit-overflow-scrolling: touch; white-space: nowrap; }
+  .tab-bar { display: inline-flex; min-width: 100%; }
+  .tab-btn {
+    flex: none;
+    padding: 12px 14px;
+    background: transparent;
+    border: none;
+    color: rgba(255,255,255,0.55);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); background: rgba(200,168,75,0.08); }
+  .tab-btn:hover { color: var(--gold2); }
+
+  /* CONTENT */
+  .tab-content { display: none; padding: 16px; max-width: 700px; margin: 0 auto; }
+  .tab-content.active { display: block; }
+
+  /* CARDS */
+  .card {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 14px;
+    box-shadow: 0 2px 10px rgba(10,22,40,0.07);
+    border: 1px solid var(--border);
+  }
+  .card-title {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--navy);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .card-title .icon { font-size: 16px; }
+
+  /* FORMULA BOXES */
+  .formula-box {
+    background: var(--navy);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin: 10px 0;
+    text-align: center;
+    border-left: 4px solid var(--gold);
+  }
+  .formula-box .formula { color: var(--gold2); font-size: 17px; font-weight: 700; font-family: 'Courier New', monospace; margin-bottom: 5px; }
+  .formula-box .formula-desc { color: rgba(255,255,255,0.75); font-size: 11px; }
+  .formula-box .formula-name { color: var(--gold); font-size: 12px; font-weight: 700; margin-bottom: 4px; }
+
+  /* CONCEPT TEXT */
+  .concept-p { color: var(--muted); line-height: 1.7; margin-bottom: 8px; font-size: 13px; }
+  .highlight { color: var(--navy); font-weight: 700; }
+  .gold-text { color: var(--gold); font-weight: 700; }
+
+  /* ANALOGY BOX */
+  .analogy-box {
+    background: linear-gradient(135deg, #fff8e7, #fff3d0);
+    border: 1px solid var(--gold);
+    border-radius: 10px;
+    padding: 14px;
+    margin: 10px 0;
+  }
+  .analogy-box .a-title { color: #8a6500; font-weight: 800; font-size: 12px; margin-bottom: 6px; }
+  .analogy-box p { color: #5a4000; font-size: 13px; line-height: 1.6; }
+
+  /* STEPS */
+  .step { display: flex; gap: 10px; margin-bottom: 10px; align-items: flex-start; }
+  .step-num { background: var(--navy); color: var(--gold); font-weight: 800; font-size: 12px; min-width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .step-text { color: var(--muted); font-size: 13px; line-height: 1.6; }
+  .step-text strong { color: var(--navy); }
+
+  /* HSC TIPS */
+  .hsc-tip {
+    background: linear-gradient(135deg, #f0fff4, #e6ffed);
+    border: 1px solid #34a853;
+    border-left: 4px solid #34a853;
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin: 8px 0;
+  }
+  .hsc-tip .tip-label { color: #1a7a4a; font-weight: 800; font-size: 11px; margin-bottom: 4px; }
+  .hsc-tip p { color: #1a4a30; font-size: 13px; line-height: 1.5; }
+
+  /* SIMULATE TAB */
+  .sim-label { font-size: 12px; font-weight: 700; color: var(--navy); margin-bottom: 4px; display: flex; justify-content: space-between; }
+  .sim-value { color: var(--gold); font-weight: 800; }
+  input[type=range] {
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--border);
+    outline: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+    margin-bottom: 14px;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--gold);
+    border: 2px solid var(--navy);
+    cursor: pointer;
+  }
+
+  /* BEAKER VISUAL */
+  .beaker-row { display: flex; gap: 10px; justify-content: center; margin: 10px 0; }
+  .beaker-wrap { display: flex; flex-direction: column; align-items: center; flex: 1; max-width: 160px; }
+  .beaker-label { font-size: 11px; font-weight: 700; color: var(--navy); margin-bottom: 5px; text-align: center; }
+  canvas.beaker-canvas { border-radius: 8px; width: 100%; }
+
+  /* RESULT CARDS */
+  .result-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+  .result-card {
+    flex: 1; min-width: 120px;
+    background: var(--navy);
+    border-radius: 10px;
+    padding: 11px 10px;
+    text-align: center;
+    border-top: 3px solid var(--gold);
+  }
+  .result-card .rc-label { color: rgba(255,255,255,0.65); font-size: 10px; margin-bottom: 4px; }
+  .result-card .rc-value { color: var(--gold2); font-size: 18px; font-weight: 800; }
+  .result-card .rc-unit { color: rgba(255,255,255,0.5); font-size: 10px; margin-top: 2px; }
+
+  /* CALC STEPS */
+  .calc-box {
+    background: #f8faff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px;
+    margin-top: 10px;
+  }
+  .calc-title { font-size: 11px; font-weight: 800; color: var(--navy); margin-bottom: 8px; }
+  .calc-step { font-size: 12px; color: var(--muted); line-height: 1.8; }
+  .calc-step span { color: var(--navy); font-weight: 700; }
+
+  /* CASE TAG */
+  .case-tag {
+    display: inline-block;
+    background: linear-gradient(90deg, var(--navy), #1a3560);
+    color: var(--gold);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+    border: 1px solid var(--gold);
+  }
+
+  /* SYMBOL TABLE */
+  .sym-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .sym-table th { background: var(--navy); color: var(--gold); padding: 9px 10px; text-align: left; font-size: 11px; font-weight: 700; }
+  .sym-table td { padding: 9px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .sym-table tr:nth-child(even) td { background: #f8faff; }
+  .sym-cell { font-family: 'Courier New', monospace; font-weight: 800; color: var(--navy); font-size: 14px; }
+
+  /* QUIZ */
+  .quiz-q-num { font-size: 10px; font-weight: 700; color: var(--gold); margin-bottom: 5px; }
+  .quiz-q-text { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 12px; line-height: 1.5; }
+  .quiz-opt {
+    display: block;
+    width: 100%;
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    text-align: left;
+    font-size: 13px;
+    color: var(--text);
+    font-family: inherit;
+    transition: all 0.2s;
+    min-height: 44px;
+  }
+  .quiz-opt:hover { border-color: var(--gold); background: #fffbf0; }
+  .quiz-opt.correct { background: #e6ffed; border-color: #34a853; color: #1a4a30; font-weight: 700; }
+  .quiz-opt.wrong { background: #fff0f0; border-color: var(--red); color: #7a1010; }
+  .quiz-opt.disabled { cursor: default; opacity: 0.75; }
+  .quiz-explain {
+    background: var(--navy);
+    color: rgba(255,255,255,0.85);
+    border-radius: 8px;
+    padding: 11px 14px;
+    font-size: 12px;
+    line-height: 1.6;
+    margin-top: 6px;
+    display: none;
+  }
+  .quiz-explain.show { display: block; }
+  .quiz-explain .ex-title { color: var(--gold); font-weight: 800; margin-bottom: 3px; font-size: 11px; }
+  .quiz-next-btn {
+    background: var(--gold);
+    color: var(--navy);
+    border: none;
+    border-radius: 10px;
+    padding: 12px 28px;
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+    margin-top: 12px;
+    display: none;
+    width: 100%;
+  }
+  .quiz-next-btn.show { display: block; }
+  .score-box {
+    background: var(--navy);
+    border-radius: 14px;
+    padding: 28px 20px;
+    text-align: center;
+    display: none;
+  }
+  .score-box.show { display: block; }
+  .score-num { font-size: 52px; font-weight: 900; color: var(--gold2); line-height: 1; margin-bottom: 6px; }
+  .score-label { color: rgba(255,255,255,0.7); font-size: 14px; margin-bottom: 16px; }
+  .score-msg { color: white; font-size: 15px; font-weight: 700; margin-bottom: 18px; }
+  .restart-btn {
+    background: var(--gold);
+    color: var(--navy);
+    border: none;
+    border-radius: 10px;
+    padding: 12px 32px;
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+  }
+  .progress-bar-wrap { background: var(--border); border-radius: 10px; height: 6px; margin-bottom: 14px; }
+  .progress-bar-fill { background: var(--gold); height: 6px; border-radius: 10px; transition: width 0.4s; }
+
+  /* GRAPH TAB */
+  #graphCanvas { border-radius: 10px; display: block; }
+
+  /* FOOTER */
+  .footer {
+    background: var(--navy);
+    color: rgba(255,255,255,0.45);
+    text-align: center;
+    padding: 13px 10px;
+    font-size: 10px;
+    line-height: 1.6;
+    margin-top: 20px;
+  }
+  .footer strong { color: var(--gold); }
+
+  /* MOLECULE VIZ */
+  .molecule-legend { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px; justify-content: center; }
+  .mol-legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--muted); }
+  .mol-dot { width: 12px; height: 12px; border-radius: 50%; }
+
+  /* SECTION DIVIDER */
+  .sec-divider { height: 1px; background: var(--border); margin: 14px 0; }
+
+  .info-chip {
+    display: inline-block;
+    background: rgba(37,99,235,0.10);
+    color: #2563eb;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 20px;
+    border: 1px solid rgba(37,99,235,0.25);
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP WATERMARK BAR -->
+<div class="top-bar">© Jitesh Salve Chemistry Simulations — All Rights Reserved</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">Interactive Simulation by Jitesh Salve</div>
+  <h1>Relative Lowering of<br/><span>Vapour Pressure</span></h1>
+  <div class="hero-sub">Maharashtra HSC Board · SYJC Chemistry · Chapter: Solutions</div>
+  <div class="hero-tag">Colligative Properties — Part 1 of 4</div>
+</div>
+
+<!-- TABS -->
+<div class="tab-bar-wrap">
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="showTab('concept')">📖 Concept</button>
+    <button class="tab-btn" onclick="showTab('simulate')">🔬 Simulate</button>
+    <button class="tab-btn" onclick="showTab('graph')">📈 Graph</button>
+    <button class="tab-btn" onclick="showTab('symbols')">🔣 Symbols</button>
+    <button class="tab-btn" onclick="showTab('quiz')">🧠 Quiz</button>
+  </div>
+</div>
+
+<!-- ======================== TAB 1: CONCEPT ======================== -->
+<div id="tab-concept" class="tab-content active">
+
+  <div class="card">
+    <div class="card-title"><span class="icon">💧</span>What is Vapour Pressure?</div>
+    <p class="concept-p">Every liquid has molecules that <span class="highlight">escape from its surface</span> into the vapour phase. These escaping molecules exert a pressure on the walls of the container — this is called <span class="highlight">vapour pressure</span>.</p>
+    <p class="concept-p">The vapour pressure of a <span class="highlight">pure solvent</span> is the maximum pressure exerted by its vapour at a given temperature.</p>
+    <div class="analogy-box">
+      <div class="a-title">🧠 Simple Idea — Think of a Crowd!</div>
+      <p>Imagine a room full of people (solvent molecules). Some people keep trying to escape through the door (surface). The pushing and jostling at the door is the "vapour pressure."<br/><br/>Now mix some strangers (solute molecules) in the room. They <strong>block some exits</strong> — fewer people escape → less vapour pressure. That's exactly what happens!</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="icon">🧪</span>What Happens When We Add a Solute?</div>
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-text">In a <strong>pure solvent</strong>, all surface positions are occupied by solvent molecules. Vapour pressure = P°<sub>1</sub> (maximum).</div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-text">When a <strong>non-volatile solute</strong> is dissolved, some surface is now occupied by solute molecules. Fewer solvent molecules can escape.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-text">The vapour pressure of the <strong>solution</strong> (P<sub>1</sub>) is now <strong>less than P°<sub>1</sub></strong>.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-text">This decrease (P°<sub>1</sub> − P<sub>1</sub>) is called <strong>Lowering of Vapour Pressure</strong> (ΔP).</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="icon">📐</span>Raoult's Law (Board Standard)</div>
+    <p class="concept-p">For a solution containing a <strong>non-volatile solute</strong>, Raoult's Law states:</p>
+    <div class="formula-box">
+      <div class="formula-name">Raoult's Law</div>
+      <div class="formula">P<sub style="color:var(--gold2)">1</sub> = x<sub style="color:var(--gold2)">1</sub> × P°<sub style="color:var(--gold2)">1</sub></div>
+      <div class="formula-desc">Vapour pressure of solution = Mole fraction of solvent × VP of pure solvent</div>
+    </div>
+    <p class="concept-p">Where x<sub>1</sub> = mole fraction of solvent = n<sub>1</sub> / (n<sub>1</sub> + n<sub>2</sub>)</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="icon">⬇️</span>Relative Lowering of Vapour Pressure</div>
+    <p class="concept-p">The <span class="highlight">Relative Lowering of Vapour Pressure</span> is defined as the ratio of the lowering of vapour pressure to the vapour pressure of the pure solvent:</p>
+    <div class="formula-box">
+      <div class="formula-name">Definition</div>
+      <div class="formula">(P°<sub style="color:var(--gold2)">1</sub> − P<sub style="color:var(--gold2)">1</sub>) / P°<sub style="color:var(--gold2)">1</sub> = x<sub style="color:var(--gold2)">2</sub></div>
+      <div class="formula-desc">Relative lowering of VP = Mole fraction of solute</div>
+    </div>
+    <div class="formula-box" style="border-left-color:#2563eb;">
+      <div class="formula-name" style="color:#93c5fd;">Derivation from Raoult's Law</div>
+      <div class="formula" style="font-size:13px; color:#bfdbfe;">
+        P<sub style="color:#bfdbfe">1</sub> = x<sub style="color:#bfdbfe">1</sub>·P°<sub style="color:#bfdbfe">1</sub><br/>
+        P°<sub style="color:#bfdbfe">1</sub> − P<sub style="color:#bfdbfe">1</sub> = P°<sub style="color:#bfdbfe">1</sub> − x<sub style="color:#bfdbfe">1</sub>·P°<sub style="color:#bfdbfe">1</sub><br/>
+        ΔP = P°<sub style="color:#bfdbfe">1</sub>(1 − x<sub style="color:#bfdbfe">1</sub>)<br/>
+        ΔP/P°<sub style="color:#bfdbfe">1</sub> = 1 − x<sub style="color:#bfdbfe">1</sub> = <span style="color:var(--gold2)">x<sub style="color:var(--gold2)">2</sub></span>
+      </div>
+      <div class="formula-desc">Since x₁ + x₂ = 1, therefore 1 − x₁ = x₂ (mole fraction of solute)</div>
+    </div>
+    <p class="concept-p">This is a <span class="highlight">Colligative Property</span> — it depends only on the <span class="highlight">number of solute particles</span>, not their identity.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="icon">🔑</span>Key Points to Remember</div>
+    <div class="hsc-tip">
+      <div class="tip-label">✅ HSC BOARD IMPORTANT</div>
+      <p>Relative lowering of VP = Mole fraction of solute (x₂). This is a pure number — <strong>no units</strong>.</p>
+    </div>
+    <div class="hsc-tip">
+      <div class="tip-label">✅ HSC BOARD IMPORTANT</div>
+      <p>This applies only to <strong>non-volatile, non-electrolyte</strong> solutes in dilute solutions.</p>
+    </div>
+    <div class="hsc-tip">
+      <div class="tip-label">✅ HSC BOARD IMPORTANT</div>
+      <p>As solute amount increases → x₂ increases → Relative lowering increases → Solution VP decreases more.</p>
+    </div>
+    <div class="hsc-tip">
+      <div class="tip-label">✅ COLLIGATIVE PROPERTY</div>
+      <p>Relative lowering depends on the <strong>number</strong> of solute molecules, not their nature or size.</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- ======================== TAB 2: SIMULATE ======================== -->
+<div id="tab-simulate" class="tab-content">
+
+  <div class="card">
+    <div class="card-title"><span class="icon">🎚️</span>Adjust Variables</div>
+
+    <div class="sim-label">
+      <span>Moles of Solvent (n<sub>1</sub>)</span>
+      <span class="sim-value" id="disp-n1">5.00 mol</span>
+    </div>
+    <input type="range" min="1" max="20" step="0.5" value="5" id="slider-n1" oninput="updateSim()"/>
+
+    <div class="sim-label">
+      <span>Moles of Solute (n<sub>2</sub>)</span>
+      <span class="sim-value" id="disp-n2">1.00 mol</span>
+    </div>
+    <input type="range" min="0.1" max="10" step="0.1" value="1" id="slider-n2" oninput="updateSim()"/>
+
+    <div class="sim-label">
+      <span>VP of Pure Solvent P°<sub>1</sub></span>
+      <span class="sim-value" id="disp-p0">100 mmHg</span>
+    </div>
+    <input type="range" min="10" max="200" step="5" value="100" id="slider-p0" oninput="updateSim()"/>
+  </div>
+
+  <div class="card" style="padding:12px 10px;">
+    <div class="card-title"><span class="icon">🔬</span>Live Visualisation</div>
+    <div id="case-tag" class="case-tag">Loading...</div>
+    <div class="beaker-row">
+      <div class="beaker-wrap">
+        <div class="beaker-label">Pure Solvent<br/>(High VP)</div>
+        <canvas class="beaker-canvas" id="beakerPure" width="130" height="160"></canvas>
+      </div>
+      <div class="beaker-wrap">
+        <div class="beaker-label">Solution<br/>(Lower VP)</div>
+        <canvas class="beaker-canvas" id="beakerSol" width="130" height="160"></canvas>
+      </div>
+    </div>
+    <div class="molecule-legend">
+      <div class="mol-legend-item"><div class="mol-dot" style="background:#60b3ff;"></div> Solvent molecule</div>
+      <div class="mol-legend-item"><div class="mol-dot" style="background:#ff8c42;"></div> Solute molecule</div>
+      <div class="mol-legend-item"><div class="mol-dot" style="background:rgba(96,179,255,0.45); border:1.5px dashed #60b3ff;"></div> Vapour molecule</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="icon">📊</span>Results</div>
+    <div class="result-row">
+      <div class="result-card">
+        <div class="rc-label">Mole fraction of solvent (x₁)</div>
+        <div class="rc-value" id="res-x1">—</div>
+      </div>
+      <div class="result-card">
+        <div class="rc-label">Mole fraction of solute (x₂)</div>
+        <div class="rc-value" id="res-x2">—</div>
+      </div>
+    </div>
+    <div class="result-row">
+      <div class="result-card">
+        <div class="rc-label">VP of Pure Solvent P°₁</div>
+        <div class="rc-value" id="res-p0">—</div>
+        <div class="rc-unit">mmHg</div>
+      </div>
+      <div class="result-card">
+        <div class="rc-label">VP of Solution P₁</div>
+        <div class="rc-value" id="res-p1">—</div>
+        <div class="rc-unit">mmHg</div>
+      </div>
+    </div>
+    <div class="result-row">
+      <div class="result-card" style="border-top-color: var(--gold2); min-width:100%;">
+        <div class="rc-label">Relative Lowering (ΔP/P°₁) = x₂</div>
+        <div class="rc-value" id="res-rl" style="font-size:24px;">—</div>
+        <div class="rc-unit">(pure number, no units)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="calc-box">
+      <div class="calc-title">📐 Step-by-Step Calculation</div>
+      <div class="calc-step" id="calc-steps">Loading...</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ======================== TAB 3: GRAPH ======================== -->
+<div id="tab-graph" class="tab-content">
+  <div class="card">
+    <div class="card-title"><span class="icon">📈</span>Vapour Pressure vs Mole Fraction of Solute (x₂)</div>
+    <p class="concept-p" style="margin-bottom:10px;">As x₂ (mole fraction of solute) increases, the vapour pressure of the solution (P₁) decreases linearly. This is the graphical representation of Raoult's Law.</p>
+    <canvas id="graphCanvas" width="660" height="340" style="width:100%; height:auto; border-radius:10px;"></canvas>
+    <div style="display:flex; gap:14px; flex-wrap:wrap; margin-top:10px; justify-content:center;">
+      <div class="mol-legend-item"><div class="mol-dot" style="background:#c8a84b; border-radius:2px; width:20px; height:3px;"></div> &nbsp;P₁ (Solution VP)</div>
+      <div class="mol-legend-item"><div class="mol-dot" style="background:#2563eb; border-radius:2px; width:20px; height:3px;"></div> &nbsp;P°₁ (Pure solvent VP)</div>
+      <div class="mol-legend-item"><div class="mol-dot" style="background:#c0392b; border-radius:50%; width:12px; height:12px;"></div> &nbsp;Current Point</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title"><span class="icon">📌</span>What the Graph Tells Us</div>
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-text">At x₂ = 0 (pure solvent): P₁ = P°₁ — maximum vapour pressure</div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-text">As x₂ increases: P₁ decreases — more solute → less VP</div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-text">The graph is a <strong>straight line</strong> with negative slope = −P°₁</div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-text">Slope of line = −P°₁ — change VP slider in Simulate tab to see different lines!</div>
+    </div>
+    <div class="hsc-tip">
+      <div class="tip-label">✅ BOARD EXAM — Graph Question</div>
+      <p>Draw a graph of P₁ vs x₂. Label: x-axis as "Mole fraction of solute (x₂)", y-axis as "Vapour Pressure (mmHg)". Mark P°₁ on y-axis. Line must start at P°₁ and slope downward. Red dot = current simulation point.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ======================== TAB 4: SYMBOLS ======================== -->
+<div id="tab-symbols" class="tab-content">
+  <div class="card">
+    <div class="card-title"><span class="icon">🔣</span>Every Symbol Explained</div>
+    <table class="sym-table">
+      <tr><th>Symbol</th><th>Full Name</th><th>Meaning in Simple Words</th></tr>
+      <tr>
+        <td class="sym-cell">P°<sub>1</sub></td>
+        <td>Vapour pressure of pure solvent</td>
+        <td>Pressure exerted by the vapour of pure liquid solvent. This is the MAXIMUM value.</td>
+      </tr>
+      <tr>
+        <td class="sym-cell">P<sub>1</sub></td>
+        <td>Vapour pressure of solution</td>
+        <td>Vapour pressure after dissolving solute. Always less than P°₁ for non-volatile solute.</td>
+      </tr>
+      <tr>
+        <td class="sym-cell">ΔP</td>
+        <td>Lowering of vapour pressure</td>
+        <td>How much the VP has dropped: ΔP = P°₁ − P₁. Always positive.</td>
+      </tr>
+      <tr>
+        <td class="sym-cell">ΔP/P°<sub>1</sub></td>
+        <td>Relative lowering of VP</td>
+        <td>Fraction of original VP that was lost. No units. Equal to x₂.</td>
+      </tr>
+      <tr>
+        <td class="sym-cell">x<sub>1</sub></td>
+        <td>Mole fraction of solvent</td>
+        <td>Fraction of total moles that are solvent molecules. x₁ = n₁/(n₁+n₂)</td>
+      </tr>
+      <tr>
+        <td class="sym-cell">x<sub>2</sub></td>
+        <td>Mole fraction of solute</td>
+        <td>Fraction of total moles that are solute molecules. x₂ = n₂/(n₁+n₂)</td>
+      </tr>
+      <tr>
+        <td class="sym-cell">n<sub>1</sub></td>
+        <td>Moles of solvent</td>
+        <td>Number of moles of the liquid solvent in the solution.</td>
+      </tr>
+      <tr>
+        <td class="sym-cell">n<sub>2</sub></td>
+        <td>Moles of solute</td>
+        <td>Number of moles of dissolved substance (solute).</td>
+      </tr>
+    </table>
+  </div>
+  <div class="card">
+    <div class="card-title"><span class="icon">🧠</span>Memory Trick</div>
+    <div class="analogy-box">
+      <div class="a-title">🔑 How to Remember the Formula</div>
+      <p><strong>"Relative Lowering = x₂"</strong><br/><br/>
+      Think: <em>"Relative Lowering of VP is the RELATIVE amount of solute in the mix — which is exactly the mole fraction of solute (x₂)!"</em><br/><br/>
+      Mole fraction of solute = How "relatively" much solute is there = Relative lowering of VP. 🎯</p>
+    </div>
+    <div class="analogy-box" style="margin-top:8px;">
+      <div class="a-title">✏️ The One Equation That Gives You All Answers</div>
+      <p style="text-align:center; font-size:16px; font-weight:800; color:#5a3000; padding:8px 0;">
+        (P°₁ − P₁) / P°₁ = x₂ = n₂ / (n₁ + n₂)
+      </p>
+      <p>From this one equation, you can find P₁, P°₁, ΔP, x₂, n₁, or n₂ — whatever the question asks!</p>
+    </div>
+  </div>
+</div>
+
+<!-- ======================== TAB 5: QUIZ ======================== -->
+<div id="tab-quiz" class="tab-content">
+  <div class="card">
+    <div class="card-title"><span class="icon">🧠</span>HSC Board Quiz — Test Yourself!</div>
+
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="quiz-progress" style="width:0%"></div>
+    </div>
+
+    <div id="quiz-area">
+      <!-- Question injected here -->
+    </div>
+
+    <div class="score-box" id="score-box">
+      <div class="score-num" id="score-num">0/7</div>
+      <div class="score-label">Your Score</div>
+      <div class="score-msg" id="score-msg">—</div>
+      <button class="restart-btn" onclick="startQuiz()">🔄 Try Again</button>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <strong>© Jitesh Salve Chemistry Simulations</strong><br/>
+  Maharashtra HSC Board Chemistry | Unauthorised copying prohibited<br/>
+  Relative Lowering of Vapour Pressure · Colligative Properties
+</div>
+
+<script>
+// ============================================================
+// TAB SWITCHING
+// ============================================================
+function showTab(name) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.target.classList.add('active');
+  if (name === 'graph') drawGraph();
+  if (name === 'simulate') { updateSim(); }
+}
+
+// ============================================================
+// SIMULATION
+// ============================================================
+var animFrame;
+var particles = [];
+
+function initParticles() {
+  particles = [];
+}
+
+function updateSim() {
+  var n1 = parseFloat(document.getElementById('slider-n1').value);
+  var n2 = parseFloat(document.getElementById('slider-n2').value);
+  var p0 = parseFloat(document.getElementById('slider-p0').value);
+
+  document.getElementById('disp-n1').textContent = n1.toFixed(2) + ' mol';
+  document.getElementById('disp-n2').textContent = n2.toFixed(2) + ' mol';
+  document.getElementById('disp-p0').textContent = p0.toFixed(0) + ' mmHg';
+
+  var total = n1 + n2;
+  var x1 = n1 / total;
+  var x2 = n2 / total;
+  var p1 = x1 * p0;
+  var deltaP = p0 - p1;
+  var rl = deltaP / p0;
+
+  document.getElementById('res-x1').textContent = x1.toFixed(4);
+  document.getElementById('res-x2').textContent = x2.toFixed(4);
+  document.getElementById('res-p0').textContent = p0.toFixed(1);
+  document.getElementById('res-p1').textContent = p1.toFixed(2);
+  document.getElementById('res-rl').textContent = rl.toFixed(4);
+
+  // Case tag
+  var ct = document.getElementById('case-tag');
+  if (x2 < 0.1) ct.textContent = '🟢 Dilute Solution — Small relative lowering';
+  else if (x2 < 0.3) ct.textContent = '🟡 Moderate Solution — Noticeable VP drop';
+  else ct.textContent = '🔴 Concentrated — Large relative lowering';
+
+  // Calc steps
+  document.getElementById('calc-steps').innerHTML =
+    '<span>n₁ = ' + n1.toFixed(2) + ' mol &nbsp;|&nbsp; n₂ = ' + n2.toFixed(2) + ' mol</span><br/>' +
+    'Total moles = n₁ + n₂ = <span>' + total.toFixed(2) + ' mol</span><br/>' +
+    'x₁ = n₁ / (n₁+n₂) = ' + n1.toFixed(2) + '/' + total.toFixed(2) + ' = <span>' + x1.toFixed(4) + '</span><br/>' +
+    'x₂ = n₂ / (n₁+n₂) = ' + n2.toFixed(2) + '/' + total.toFixed(2) + ' = <span>' + x2.toFixed(4) + '</span><br/>' +
+    'P₁ = x₁ × P°₁ = ' + x1.toFixed(4) + ' × ' + p0.toFixed(0) + ' = <span>' + p1.toFixed(2) + ' mmHg</span><br/>' +
+    'ΔP = P°₁ − P₁ = ' + p0.toFixed(0) + ' − ' + p1.toFixed(2) + ' = <span>' + deltaP.toFixed(2) + ' mmHg</span><br/>' +
+    '<span style="color:var(--gold);font-weight:800;">Relative Lowering = ΔP/P°₁ = ' + rl.toFixed(4) + ' = x₂ ✓</span>';
+
+  drawBeakers(x2, p0, p1);
+  if (document.getElementById('tab-graph').classList.contains('active')) drawGraph();
+  window.__simX2 = x2;
+  window.__simP0 = p0;
+  window.__simP1 = p1;
+}
+
+// ============================================================
+// BEAKER DRAWING
+// ============================================================
+function drawBeakers(x2, p0, p1) {
+  drawBeaker('beakerPure', 0, p0, p0, true);
+  drawBeaker('beakerSol', x2, p1, p0, false);
+}
+
+function drawBeaker(id, x2, pVal, p0, isPure) {
+  var canvas = document.getElementById(id);
+  var ctx = canvas.getContext('2d');
+  var W = canvas.width, H = canvas.height;
+  ctx.clearRect(0, 0, W, H);
+
+  // Background
+  ctx.fillStyle = '#f0f4ff';
+  ctx.fillRect(0, 0, W, H);
+
+  // Beaker body
+  var bx = 15, bw = W - 30;
+  var liquidTop = 50, liquidBot = H - 30;
+  var liquidH = liquidBot - liquidTop;
+
+  // Vapour region
+  var vapourH = Math.round((pVal / p0) * 40) + 15;
+  ctx.fillStyle = 'rgba(200,220,255,0.3)';
+  ctx.fillRect(bx, liquidTop - vapourH, bw, vapourH);
+
+  // Liquid
+  ctx.fillStyle = isPure ? 'rgba(96,179,255,0.82)' : 'rgba(96,179,255,0.65)';
+  ctx.fillRect(bx, liquidTop, bw, liquidH);
+
+  // Beaker outline
+  ctx.strokeStyle = '#0a1628';
+  ctx.lineWidth = 2.5;
+  ctx.strokeRect(bx, liquidTop - vapourH, bw, liquidH + vapourH);
+
+  // Vapour molecules (escaped)
+  var numVapour = Math.round((pVal / p0) * 12);
+  var seed = isPure ? 42 : 99;
+  for (var i = 0; i < numVapour; i++) {
+    var vx = bx + 8 + pseudoRand(seed + i * 7) * (bw - 16);
+    var vy = (liquidTop - vapourH) + 4 + pseudoRand(seed + i * 13) * (vapourH - 8);
+    ctx.beginPath();
+    ctx.arc(vx, vy, 4, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(96,179,255,0.55)';
+    ctx.fill();
+    ctx.strokeStyle = '#60b3ff';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+  }
+
+  // Surface molecules
+  var totalMol = 16;
+  var soluteMol = isPure ? 0 : Math.round(x2 * totalMol);
+  var solventMol = totalMol - soluteMol;
+  var cols = 8;
+  var rows = 2;
+  var molR = 7;
+  var startX = bx + 8;
+  var startY = liquidTop + 8;
+  var colW = (bw - 16) / cols;
+
+  for (var r = 0; r < rows; r++) {
+    for (var c = 0; c < cols; c++) {
+      var idx = r * cols + c;
+      var mx = startX + c * colW + colW / 2;
+      var my = startY + r * (molR * 2 + 4) + molR;
+      if (my > liquidBot - molR) continue;
+      ctx.beginPath();
+      ctx.arc(mx, my, molR, 0, Math.PI * 2);
+      if (idx < solventMol) {
+        ctx.fillStyle = '#60b3ff';
+      } else {
+        ctx.fillStyle = '#ff8c42';
+      }
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(255,255,255,0.5)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+  }
+
+  // Deeper liquid molecules
+  for (var r2 = 2; r2 < 5; r2++) {
+    for (var c2 = 0; c2 < cols; c2++) {
+      var mx2 = startX + c2 * colW + colW / 2;
+      var my2 = startY + r2 * (molR * 2 + 2) + molR;
+      if (my2 > liquidBot - molR) continue;
+      ctx.beginPath();
+      ctx.arc(mx2, my2, molR * 0.85, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(96,179,255,0.5)';
+      ctx.fill();
+    }
+  }
+
+  // VP arrow/label
+  ctx.fillStyle = '#0a1628';
+  ctx.font = 'bold 11px Segoe UI, Arial';
+  ctx.textAlign = 'center';
+  var label = isPure ? 'P\u00b0\u2081 = ' + p0.toFixed(0) + ' mmHg' : 'P\u2081 = ' + pVal.toFixed(1) + ' mmHg';
+  ctx.fillText(label, W / 2, liquidTop - vapourH - 5);
+
+  // Watermark
+  ctx.font = '8px Arial';
+  ctx.fillStyle = 'rgba(10,22,40,0.12)';
+  ctx.textAlign = 'center';
+  ctx.fillText('\u00a9 Jitesh Salve', W / 2, H - 5);
+}
+
+function pseudoRand(seed) {
+  var x = Math.sin(seed) * 10000;
+  return x - Math.floor(x);
+}
+
+// ============================================================
+// GRAPH
+// ============================================================
+function drawGraph() {
+  var canvas = document.getElementById('graphCanvas');
+  var ctx = canvas.getContext('2d');
+  var W = canvas.width, H = canvas.height;
+  ctx.clearRect(0, 0, W, H);
+
+  var p0 = window.__simP0 || 100;
+  var x2cur = window.__simX2 || 0.167;
+
+  var padL = 68, padR = 30, padT = 36, padB = 52;
+  var gW = W - padL - padR;
+  var gH = H - padT - padB;
+
+  // Background
+  ctx.fillStyle = '#0a1628';
+  ctx.fillRect(0, 0, W, H);
+
+  // Grid
+  ctx.strokeStyle = 'rgba(255,255,255,0.07)';
+  ctx.lineWidth = 1;
+  for (var i = 0; i <= 5; i++) {
+    var gx = padL + (i / 5) * gW;
+    ctx.beginPath(); ctx.moveTo(gx, padT); ctx.lineTo(gx, padT + gH); ctx.stroke();
+    var gy = padT + (i / 5) * gH;
+    ctx.beginPath(); ctx.moveTo(padL, gy); ctx.lineTo(padL + gW, gy); ctx.stroke();
+  }
+
+  // Axes
+  ctx.strokeStyle = 'rgba(255,255,255,0.5)';
+  ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(padL, padT); ctx.lineTo(padL, padT + gH); ctx.lineTo(padL + gW, padT + gH); ctx.stroke();
+
+  // P0 horizontal reference line
+  ctx.strokeStyle = '#2563eb';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([8, 5]);
+  ctx.beginPath(); ctx.moveTo(padL, padT); ctx.lineTo(padL + gW, padT); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // P1 line: from (x2=0, P°1) to (x2=1, P=0)
+  ctx.strokeStyle = '#c8a84b';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(padL, padT); // x2=0, P=P°1 (top left)
+  ctx.lineTo(padL + gW, padT + gH); // x2=1, P=0 (bottom right)
+  ctx.stroke();
+
+  // Axis labels — plain text only
+  ctx.fillStyle = 'rgba(255,255,255,0.7)';
+  ctx.font = '11px Arial';
+  ctx.textAlign = 'center';
+  // X axis labels
+  for (var j = 0; j <= 5; j++) {
+    var lx = padL + (j / 5) * gW;
+    ctx.fillText((j * 0.2).toFixed(1), lx, padT + gH + 18);
+  }
+  // Y axis labels
+  ctx.textAlign = 'right';
+  for (var k = 0; k <= 5; k++) {
+    var ly = padT + (k / 5) * gH;
+    var yVal = p0 * (1 - k / 5);
+    ctx.fillText(yVal.toFixed(0), padL - 8, ly + 4);
+  }
+
+  // Axis titles
+  ctx.fillStyle = 'rgba(255,255,255,0.9)';
+  ctx.font = 'bold 12px Arial';
+  ctx.textAlign = 'center';
+  ctx.fillText('Mole fraction of solute (x2)', padL + gW / 2, H - 10);
+  ctx.save();
+  ctx.translate(14, padT + gH / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillText('Vapour Pressure (mmHg)', 0, 0);
+  ctx.restore();
+
+  // P0 label
+  ctx.fillStyle = '#93c5fd';
+  ctx.font = 'bold 11px Arial';
+  ctx.textAlign = 'left';
+  ctx.fillText('P0\u2081 = ' + p0.toFixed(0) + ' mmHg', padL + 5, padT - 8);
+
+  // Current point
+  var cx2screen = padL + x2cur * gW;
+  var cy2screen = padT + x2cur * gH;
+  ctx.beginPath();
+  ctx.arc(cx2screen, cy2screen, 9, 0, Math.PI * 2);
+  ctx.fillStyle = '#c0392b';
+  ctx.fill();
+  ctx.strokeStyle = 'white';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // Current point label
+  ctx.fillStyle = 'white';
+  ctx.font = 'bold 10px Arial';
+  ctx.textAlign = 'left';
+  var p1cur = (1 - x2cur) * p0;
+  ctx.fillText('x2=' + x2cur.toFixed(2) + ', P1=' + p1cur.toFixed(1), cx2screen + 12, cy2screen - 3);
+
+  // Watermark
+  ctx.font = '11px Arial';
+  ctx.fillStyle = 'rgba(200,168,75,0.12)';
+  ctx.textAlign = 'center';
+  ctx.fillText('\u00a9 Jitesh Salve', W / 2, H / 2);
+}
+
+// ============================================================
+// QUIZ
+// ============================================================
+var quizData = [
+  {
+    q: "The relative lowering of vapour pressure is equal to which of the following?",
+    opts: ["Mole fraction of solvent (x₁)", "Mole fraction of solute (x₂)", "Molality of solution", "Molarity of solution"],
+    ans: 1,
+    exp: "By Raoult's Law derivation: (P°₁ − P₁)/P°₁ = 1 − x₁ = x₂ (mole fraction of solute). This is the fundamental result."
+  },
+  {
+    q: "For a solution with n₁ = 4 mol solvent and n₂ = 1 mol solute, what is the relative lowering of vapour pressure?",
+    opts: ["0.25", "0.20", "0.80", "0.50"],
+    ans: 1,
+    exp: "x₂ = n₂/(n₁+n₂) = 1/(4+1) = 1/5 = 0.20. Relative lowering = x₂ = 0.20."
+  },
+  {
+    q: "The vapour pressure of pure water is 23.8 mmHg at 25°C. If the mole fraction of solute is 0.10, what is the VP of the solution?",
+    opts: ["23.8 mmHg", "21.42 mmHg", "2.38 mmHg", "26.18 mmHg"],
+    ans: 1,
+    exp: "P₁ = x₁ × P°₁ = (1 − 0.10) × 23.8 = 0.90 × 23.8 = 21.42 mmHg."
+  },
+  {
+    q: "Relative lowering of vapour pressure is a colligative property. This means it depends on:",
+    opts: ["The nature and size of the solute", "The number of solute particles only", "The molecular weight of solvent", "The temperature only"],
+    ans: 1,
+    exp: "Colligative properties depend only on the NUMBER of solute particles (mole fraction), not on their nature, size, or identity."
+  },
+  {
+    q: "Which type of solute is assumed in Raoult's Law for relative lowering of VP?",
+    opts: ["Volatile electrolyte", "Non-volatile, non-electrolyte solute", "Any ionic compound", "Volatile non-electrolyte"],
+    ans: 1,
+    exp: "Raoult's Law for RLVP applies to non-volatile, non-electrolyte solutes in dilute ideal solutions."
+  },
+  {
+    q: "If the relative lowering of vapour pressure is 0.15, what is the mole fraction of the solvent?",
+    opts: ["0.15", "0.85", "0.75", "1.15"],
+    ans: 1,
+    exp: "x₁ + x₂ = 1. Since RLVP = x₂ = 0.15, therefore x₁ = 1 − 0.15 = 0.85."
+  },
+  {
+    q: "Which formula correctly represents Raoult's Law for a binary solution with non-volatile solute?",
+    opts: ["P₁ = x₂ × P°₁", "P₁ = x₁ × P°₁", "P₁ = (x₁ + x₂) × P°₁", "P₁ = P°₁ / x₁"],
+    ans: 1,
+    exp: "Raoult's Law: P₁ = x₁ × P°₁, where x₁ is the mole fraction of the SOLVENT (not solute). This gives the vapour pressure of the solution."
+  }
+];
+
+var qIdx = 0;
+var score = 0;
+
+function startQuiz() {
+  qIdx = 0; score = 0;
+  document.getElementById('score-box').classList.remove('show');
+  document.getElementById('quiz-area').style.display = 'block';
+  renderQuestion();
+}
+
+function renderQuestion() {
+  var qData = quizData[qIdx];
+  var pct = (qIdx / quizData.length) * 100;
+  document.getElementById('quiz-progress').style.width = pct + '%';
+
+  var html = '<div class="quiz-q-num">Question ' + (qIdx+1) + ' of ' + quizData.length + '</div>';
+  html += '<div class="quiz-q-text">' + qData.q + '</div>';
+  qData.opts.forEach(function(opt, i) {
+    html += '<button class="quiz-opt" id="opt-' + i + '" onclick="selectAnswer(' + i + ')">' + opt + '</button>';
+  });
+  html += '<div class="quiz-explain" id="quiz-explain"><div class="ex-title">📝 Explanation</div><span id="ex-text"></span></div>';
+  html += '<button class="quiz-next-btn" id="quiz-next" onclick="nextQuestion()">' + (qIdx < quizData.length - 1 ? 'Next Question →' : 'See My Score 🏆') + '</button>';
+
+  document.getElementById('quiz-area').innerHTML = html;
+}
+
+function selectAnswer(chosen) {
+  var qData = quizData[qIdx];
+  var opts = document.querySelectorAll('.quiz-opt');
+  opts.forEach(function(o) { o.classList.add('disabled'); o.onclick = null; });
+
+  if (chosen === qData.ans) {
+    score++;
+    opts[chosen].classList.add('correct');
+  } else {
+    opts[chosen].classList.add('wrong');
+    opts[qData.ans].classList.add('correct');
+  }
+
+  document.getElementById('ex-text').textContent = qData.exp;
+  document.getElementById('quiz-explain').classList.add('show');
+  document.getElementById('quiz-next').classList.add('show');
+}
+
+function nextQuestion() {
+  qIdx++;
+  if (qIdx >= quizData.length) {
+    document.getElementById('quiz-area').style.display = 'none';
+    var sb = document.getElementById('score-box');
+    sb.classList.add('show');
+    document.getElementById('score-num').textContent = score + '/' + quizData.length;
+    var pct2 = Math.round(score / quizData.length * 100);
+    var msg = pct2 >= 85 ? '🎉 Excellent! HSC Board ready!' : pct2 >= 57 ? '👍 Good work! Revise the formulas once more.' : '📚 Keep practicing — you will get there!';
+    document.getElementById('score-msg').textContent = msg;
+    document.getElementById('quiz-progress').style.width = '100%';
+  } else {
+    renderQuestion();
+  }
+}
+
+// ============================================================
+// INIT
+// ============================================================
+window.__simX2 = 0.167;
+window.__simP0 = 100;
+window.__simP1 = 83.3;
+updateSim();
+startQuiz();
+</script>
+
+</body>
+</html>

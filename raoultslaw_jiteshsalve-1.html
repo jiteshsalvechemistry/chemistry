@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>Raoult's Law Simulation — Jitesh Salve</title>
+<style>
+  :root {
+    --navy: #0a1628;
+    --gold: #c8a84b;
+    --red: #c0392b;
+    --light: #f4f6fb;
+    --card: #ffffff;
+    --a-color: #2980b9;
+    --b-color: #e67e22;
+    --t-color: #27ae60;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: var(--light);
+    color: var(--navy);
+    min-height: 100vh;
+  }
+
+  /* ── WATERMARK HEADER ── */
+  .watermark-bar {
+    background: var(--navy);
+    color: var(--gold);
+    text-align: center;
+    padding: 6px 10px;
+    font-size: 11px;
+    letter-spacing: 2px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  /* ── HERO HEADER ── */
+  .hero {
+    background: linear-gradient(135deg, var(--navy) 0%, #1a2e4a 100%);
+    color: white;
+    padding: 22px 16px 18px;
+    text-align: center;
+    position: relative;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: var(--gold);
+    color: var(--navy);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    padding: 3px 12px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+  .hero h1 {
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+  .hero h1 span { color: var(--gold); }
+  .hero p {
+    font-size: 13px;
+    opacity: 0.75;
+    margin-top: 4px;
+  }
+  .creator-tag {
+    margin-top: 10px;
+    font-size: 11px;
+    color: var(--gold);
+    opacity: 0.9;
+    font-style: italic;
+  }
+
+  /* ── SECTION WRAPPER ── */
+  .section {
+    padding: 16px 14px;
+  }
+  .section-title {
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--navy);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-left: 4px solid var(--gold);
+    padding-left: 10px;
+    margin-bottom: 12px;
+  }
+
+  /* ── CONCEPT CARDS ── */
+  .concept-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+  }
+  .concept-card {
+    flex: 1;
+    min-width: 140px;
+    background: var(--card);
+    border-radius: 12px;
+    padding: 14px 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    border-top: 4px solid var(--gold);
+    text-align: center;
+  }
+  .concept-card.a { border-top-color: var(--a-color); }
+  .concept-card.b { border-top-color: var(--b-color); }
+  .concept-card.t { border-top-color: var(--t-color); }
+  .concept-card .symbol {
+    font-size: 22px;
+    font-weight: 800;
+    margin-bottom: 4px;
+  }
+  .concept-card .label {
+    font-size: 11px;
+    color: #666;
+    line-height: 1.4;
+  }
+  .concept-card .value-display {
+    font-size: 18px;
+    font-weight: 700;
+    margin-top: 6px;
+  }
+
+  /* ── FORMULA BOX ── */
+  .formula-box {
+    background: var(--navy);
+    color: white;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 14px;
+    text-align: center;
+  }
+  .formula-box .formula {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 1px;
+    margin: 4px 0;
+  }
+  .formula-box .sub {
+    font-size: 11px;
+    opacity: 0.7;
+    margin-top: 4px;
+  }
+
+  /* ── SLIDERS ── */
+  .slider-group {
+    background: white;
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  }
+  .slider-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+  .slider-label span:first-child {
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .slider-label .val {
+    font-size: 14px;
+    font-weight: 800;
+    color: white;
+    background: var(--navy);
+    padding: 2px 10px;
+    border-radius: 20px;
+  }
+  input[type=range] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 8px;
+    border-radius: 4px;
+    outline: none;
+    cursor: pointer;
+  }
+  input[type=range].a-slider { background: linear-gradient(to right, var(--a-color), #aed6f1); }
+  input[type=range].b-slider { background: linear-gradient(to right, var(--b-color), #fad7a0); }
+  input[type=range].x-slider { background: linear-gradient(to right, var(--a-color), var(--b-color)); }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--navy);
+    border: 3px solid var(--gold);
+    cursor: pointer;
+  }
+
+  /* ── MIXBEAKER ── */
+  .beaker-section {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+    justify-content: center;
+    margin: 14px 0;
+    flex-wrap: wrap;
+  }
+  .beaker-wrap { text-align: center; }
+  .beaker-label { font-size: 12px; font-weight: 700; margin-bottom: 6px; }
+  .beaker {
+    width: 70px;
+    height: 100px;
+    border: 3px solid var(--navy);
+    border-top: none;
+    border-radius: 0 0 16px 16px;
+    position: relative;
+    overflow: hidden;
+    background: #e8f4f8;
+  }
+  .beaker-liquid {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    border-radius: 0 0 13px 13px;
+    transition: height 0.4s, background 0.4s;
+  }
+  .beaker-rim {
+    width: 76px;
+    height: 8px;
+    background: var(--navy);
+    border-radius: 4px 4px 0 0;
+    margin: 0 auto;
+  }
+  .arrow-mix {
+    font-size: 28px;
+    color: var(--gold);
+    font-weight: 900;
+    padding-bottom: 30px;
+  }
+  .vp-label {
+    font-size: 11px;
+    color: #555;
+    margin-top: 4px;
+  }
+  /* Vapor bubbles */
+  .vapor {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 100%;
+    pointer-events: none;
+  }
+  .bubble {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0;
+    animation: rise 2s infinite;
+  }
+  @keyframes rise {
+    0% { opacity: 0.7; transform: translateY(0) scale(1); }
+    100% { opacity: 0; transform: translateY(-80px) scale(0.3); }
+  }
+
+  /* ── GRAPH CANVAS ── */
+  .graph-wrap {
+    background: white;
+    border-radius: 14px;
+    padding: 14px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    margin-bottom: 14px;
+  }
+  canvas#graph {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 8px;
+  }
+  .graph-legend {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .legend-dot {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+  }
+
+  /* ── CASE PANEL ── */
+  .case-panel {
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 10px;
+    color: white;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .case-panel h3 {
+    font-size: 15px;
+    margin-bottom: 6px;
+  }
+  .case-a { background: linear-gradient(135deg, #1a5276, #2980b9); }
+  .case-b { background: linear-gradient(135deg, #784212, #e67e22); }
+
+  /* ── SYMBOL TABLE ── */
+  .sym-table {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    margin-bottom: 14px;
+  }
+  .sym-row {
+    display: flex;
+    align-items: center;
+    padding: 10px 14px;
+    border-bottom: 1px solid #f0f0f0;
+    gap: 10px;
+  }
+  .sym-row:last-child { border-bottom: none; }
+  .sym-icon {
+    font-size: 16px;
+    font-weight: 800;
+    width: 50px;
+    text-align: center;
+    color: var(--navy);
+    background: #f0f4f8;
+    padding: 6px;
+    border-radius: 8px;
+  }
+  .sym-text { font-size: 12px; color: #444; flex: 1; }
+  .sym-text strong { display: block; color: var(--navy); }
+
+  /* ── QUIZ ── */
+  .quiz-card {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    margin-bottom: 10px;
+  }
+  .quiz-q {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: var(--navy);
+  }
+  .quiz-options { display: flex; flex-direction: column; gap: 8px; }
+  .quiz-opt {
+    background: var(--light);
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 13px;
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+    transition: all 0.2s;
+    color: var(--navy);
+  }
+  .quiz-opt:active { transform: scale(0.98); }
+  .quiz-opt.correct { background: #d5f5e3; border-color: #27ae60; color: #145a32; font-weight: 700; }
+  .quiz-opt.wrong { background: #fadbd8; border-color: #e74c3c; color: #7b241c; }
+  .quiz-feedback {
+    margin-top: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    min-height: 20px;
+    text-align: center;
+  }
+  .btn-next {
+    width: 100%;
+    margin-top: 12px;
+    padding: 12px;
+    background: var(--navy);
+    color: var(--gold);
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    display: none;
+    font-family: inherit;
+  }
+
+  /* ── FOOTER WATERMARK ── */
+  .footer-wm {
+    background: var(--navy);
+    color: var(--gold);
+    text-align: center;
+    padding: 16px;
+    font-size: 12px;
+    letter-spacing: 1px;
+  }
+  .footer-wm strong { display: block; font-size: 15px; margin-bottom: 4px; }
+
+  /* ── TABS ── */
+  .tab-bar {
+    display: flex;
+    background: white;
+    border-bottom: 2px solid var(--gold);
+    overflow-x: auto;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .tab-bar::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    flex: none;
+    padding: 12px 16px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #888;
+    background: none;
+    border: none;
+    cursor: pointer;
+    white-space: nowrap;
+    font-family: inherit;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    transition: all 0.2s;
+  }
+  .tab-btn.active {
+    color: var(--navy);
+    border-bottom-color: var(--gold);
+  }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+</style>
+</head>
+<body>
+
+<div class="watermark-bar">⚗️ © Jitesh Salve Chemistry Simulations — All Rights Reserved</div>
+
+<div class="hero">
+  <div class="hero-badge">FYJC / SYJC · Maharashtra HSC Board</div>
+  <h1>RAOULT'S <span>LAW</span></h1>
+  <p>Liquid–Liquid Solutions · Volatile Components</p>
+  <div class="creator-tag">Interactive Simulation by Jitesh Salve</div>
+</div>
+
+<!-- TAB NAV -->
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="showTab('concept')">📖 Concept</button>
+  <button class="tab-btn" onclick="showTab('simulate')">🔬 Simulate</button>
+  <button class="tab-btn" onclick="showTab('graph')">📈 Graph</button>
+  <button class="tab-btn" onclick="showTab('symbols')">🔣 Symbols</button>
+  <button class="tab-btn" onclick="showTab('quiz')">🧠 Quiz</button>
+</div>
+
+<!-- ═══════════════ TAB 1: CONCEPT ═══════════════ -->
+<div class="tab-content active" id="tab-concept">
+  <div class="section">
+    <div class="section-title">What is Raoult's Law?</div>
+
+    <div class="formula-box">
+      <div class="formula">Pₐ = P°ₐ · xₐ</div>
+      <div class="formula">P<sub>b</sub> = P°<sub>b</sub> · x<sub>b</sub></div>
+      <div class="sub">Partial VP of each component = VP of pure liquid × its mole fraction</div>
+    </div>
+
+    <div class="formula-box" style="background:#1a5276;">
+      <div class="formula">P<sub>t</sub> = Pₐ + P<sub>b</sub></div>
+      <div class="sub">Total Vapour Pressure = Sum of partial pressures (Dalton's Law)</div>
+    </div>
+
+    <div style="background:white; border-radius:12px; padding:14px; box-shadow:0 2px 8px rgba(0,0,0,0.07); margin-bottom:12px;">
+      <div style="font-weight:700; margin-bottom:8px; color:var(--navy);">The Simple Idea 💡</div>
+      <div style="font-size:13px; line-height:1.7; color:#333;">
+        When you mix two <strong>volatile liquids</strong> A and B together, each liquid tries to <em>evaporate</em> (turn into vapour). The pressure each creates above the solution depends on:
+        <ul style="margin:8px 0 0 16px;">
+          <li>How much of it was in the original pure form (P° — pure vapour pressure)</li>
+          <li>How much of it is present in the mixture (x — mole fraction)</li>
+        </ul>
+        <br/>The more of liquid A you add, the more vapour pressure A contributes. Simple!
+      </div>
+    </div>
+
+    <!-- Two Cases -->
+    <div class="section-title" style="margin-top:4px;">Two Important Cases</div>
+
+    <div class="case-panel case-a">
+      <h3>Case 1: P°ₐ &gt; P°<sub>b</sub></h3>
+      <div>Liquid A is more volatile than B.<br/>
+      Formula: <strong>P<sub>t</sub> = (P°ₐ − P°<sub>b</sub>)·xₐ + P°<sub>b</sub></strong><br/>
+      Graph: Line rises from P°<sub>b</sub> (when xₐ=0) to P°ₐ (when xₐ=1)</div>
+    </div>
+
+    <div class="case-panel case-b">
+      <h3>Case 2: P°<sub>b</sub> &gt; P°ₐ</h3>
+      <div>Liquid B is more volatile than A.<br/>
+      Formula: <strong>P<sub>t</sub> = (P°<sub>b</sub> − P°ₐ)·x<sub>b</sub> + P°ₐ</strong><br/>
+      Graph: Line rises from P°ₐ (when x<sub>b</sub>=0) to P°<sub>b</sub> (when x<sub>b</sub>=1)</div>
+    </div>
+
+    <div style="background:#fef9e7; border:2px solid var(--gold); border-radius:12px; padding:14px; font-size:13px; line-height:1.6; color:#333;">
+      <strong>📌 Key Condition:</strong> Both liquids A and B must be <strong>volatile</strong> (i.e., they evaporate easily). If one component is non-volatile, we use a different form of Raoult's Law.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ TAB 2: SIMULATE ═══════════════ -->
+<div class="tab-content" id="tab-simulate">
+  <div class="section">
+    <div class="section-title">Mix Liquids A + B</div>
+
+    <!-- Sliders -->
+    <div class="slider-group">
+      <div class="slider-label">
+        <span style="color:var(--a-color);">P°ₐ — Pure VP of Liquid A</span>
+        <span class="val" id="pA0_val">100</span>
+      </div>
+      <input type="range" class="a-slider" id="pA0" min="10" max="200" value="100"
+             oninput="updateSim()"/>
+      <div style="font-size:11px; color:#888; margin-top:4px;">mmHg</div>
+    </div>
+
+    <div class="slider-group">
+      <div class="slider-label">
+        <span style="color:var(--b-color);">P°<sub>b</sub> — Pure VP of Liquid B</span>
+        <span class="val" id="pB0_val">60</span>
+      </div>
+      <input type="range" class="b-slider" id="pB0" min="10" max="200" value="60"
+             oninput="updateSim()"/>
+      <div style="font-size:11px; color:#888; margin-top:4px;">mmHg</div>
+    </div>
+
+    <div class="slider-group">
+      <div class="slider-label">
+        <span>xₐ — Mole Fraction of A in Solution</span>
+        <span class="val" id="xA_val">0.50</span>
+      </div>
+      <input type="range" class="x-slider" id="xA" min="0" max="100" value="50"
+             oninput="updateSim()"/>
+      <div style="display:flex; justify-content:space-between; font-size:11px; color:#888; margin-top:4px;">
+        <span>xₐ=0 (Pure B)</span><span>xₐ=1 (Pure A)</span>
+      </div>
+    </div>
+
+    <!-- Beaker visual -->
+    <div class="beaker-section">
+      <div class="beaker-wrap">
+        <div class="beaker-label" style="color:var(--a-color);">Liquid A</div>
+        <div class="beaker-rim"></div>
+        <div class="beaker">
+          <div class="beaker-liquid" id="liqA" style="height:70%; background:#aed6f1;"></div>
+          <div class="vapor" id="vaporA"></div>
+        </div>
+        <div class="vp-label">P°ₐ = <span id="pA0_lbl">100</span> mmHg</div>
+      </div>
+
+      <div class="arrow-mix">+</div>
+
+      <div class="beaker-wrap">
+        <div class="beaker-label" style="color:var(--b-color);">Liquid B</div>
+        <div class="beaker-rim"></div>
+        <div class="beaker">
+          <div class="beaker-liquid" id="liqB" style="height:70%; background:#fad7a0;"></div>
+          <div class="vapor" id="vaporB"></div>
+        </div>
+        <div class="vp-label">P°<sub>b</sub> = <span id="pB0_lbl">60</span> mmHg</div>
+      </div>
+
+      <div class="arrow-mix">⟹</div>
+
+      <div class="beaker-wrap">
+        <div class="beaker-label" style="color:var(--t-color);">Solution A+B</div>
+        <div class="beaker-rim" style="width:90px;"></div>
+        <div class="beaker" style="width:84px;">
+          <div class="beaker-liquid" id="liqMix" style="height:70%;"></div>
+          <div class="vapor" id="vaporMix"></div>
+        </div>
+        <div class="vp-label">P<sub>t</sub> = <span id="pT_lbl" style="color:var(--t-color); font-weight:700;">80</span> mmHg</div>
+      </div>
+    </div>
+
+    <!-- Result cards -->
+    <div class="concept-row">
+      <div class="concept-card a">
+        <div class="symbol" style="color:var(--a-color);">Pₐ</div>
+        <div class="label">Partial Vapour Pressure of Liquid A</div>
+        <div class="value-display" style="color:var(--a-color);" id="pA_result">50.0</div>
+        <div class="label">mmHg</div>
+      </div>
+      <div class="concept-card b">
+        <div class="symbol" style="color:var(--b-color);">P<sub>b</sub></div>
+        <div class="label">Partial Vapour Pressure of Liquid B</div>
+        <div class="value-display" style="color:var(--b-color);" id="pB_result">30.0</div>
+        <div class="label">mmHg</div>
+      </div>
+      <div class="concept-card t">
+        <div class="symbol" style="color:var(--t-color);">P<sub>t</sub></div>
+        <div class="label">Total Vapour Pressure of Solution</div>
+        <div class="value-display" style="color:var(--t-color);" id="pT_result">80.0</div>
+        <div class="label">mmHg</div>
+      </div>
+    </div>
+
+    <!-- Live working -->
+    <div class="formula-box" id="live-calc" style="text-align:left; font-size:13px; line-height:2;">
+      <div id="working-text"></div>
+    </div>
+
+    <!-- Case label -->
+    <div id="case-label" style="border-radius:10px; padding:12px 14px; text-align:center; font-weight:700; font-size:14px; color:white;"></div>
+  </div>
+</div>
+
+<!-- ═══════════════ TAB 3: GRAPH ═══════════════ -->
+<div class="tab-content" id="tab-graph">
+  <div class="section">
+    <div class="section-title">Pressure vs. Mole Fraction Graph</div>
+    <div class="graph-wrap">
+      <canvas id="graph" width="600" height="420"></canvas>
+      <div class="graph-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:var(--a-color);"></div>Pₐ (A)</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--b-color);"></div>P<sub>b</sub> (B)</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--t-color);"></div>P<sub>t</sub> (Total)</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--red); border-radius:2px;"></div>Your Point</div>
+      </div>
+    </div>
+    <div style="background:white; border-radius:12px; padding:14px; font-size:13px; line-height:1.7; box-shadow:0 2px 8px rgba(0,0,0,0.07);">
+      <strong>How to read this graph:</strong><br/>
+      • The x-axis shows <strong>xₐ</strong> (mole fraction of A): 0 = pure B, 1 = pure A.<br/>
+      • The blue line is Pₐ = P°ₐ · xₐ (straight, starts at 0)<br/>
+      • The orange line is P<sub>b</sub> = P°<sub>b</sub> · x<sub>b</sub> (straight, starts high)<br/>
+      • The green line is P<sub>t</sub> = Pₐ + P<sub>b</sub> (also straight for ideal solutions)<br/>
+      • The <span style="color:red; font-weight:700;">red dot</span> is your current mixture from the Simulate tab!
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ TAB 4: SYMBOLS ═══════════════ -->
+<div class="tab-content" id="tab-symbols">
+  <div class="section">
+    <div class="section-title">What Does Each Symbol Mean?</div>
+    <div class="sym-table">
+      <div class="sym-row">
+        <div class="sym-icon">P°ₐ</div>
+        <div class="sym-text"><strong>Vapour Pressure of Pure Liquid A</strong>When liquid A is alone (no mixing), this is the pressure its vapour creates at a given temperature.</div>
+      </div>
+      <div class="sym-row">
+        <div class="sym-icon">P°<sub>b</sub></div>
+        <div class="sym-text"><strong>Vapour Pressure of Pure Liquid B</strong>Same idea for liquid B alone.</div>
+      </div>
+      <div class="sym-row">
+        <div class="sym-icon">xₐ</div>
+        <div class="sym-text"><strong>Mole Fraction of A in Solution</strong>Fraction = (moles of A) ÷ (total moles). Always between 0 and 1.</div>
+      </div>
+      <div class="sym-row">
+        <div class="sym-icon">x<sub>b</sub></div>
+        <div class="sym-text"><strong>Mole Fraction of B in Solution</strong>x<sub>b</sub> = 1 − xₐ (they must always add up to 1)</div>
+      </div>
+      <div class="sym-row">
+        <div class="sym-icon">Pₐ</div>
+        <div class="sym-text"><strong>Partial Vapour Pressure of A</strong>The VP that A contributes to the mixture. Pₐ = P°ₐ × xₐ</div>
+      </div>
+      <div class="sym-row">
+        <div class="sym-icon">P<sub>b</sub></div>
+        <div class="sym-text"><strong>Partial Vapour Pressure of B</strong>The VP that B contributes to the mixture. P<sub>b</sub> = P°<sub>b</sub> × x<sub>b</sub></div>
+      </div>
+      <div class="sym-row">
+        <div class="sym-icon">P<sub>t</sub></div>
+        <div class="sym-text"><strong>Total Vapour Pressure</strong>Sum of all partial pressures. P<sub>t</sub> = Pₐ + P<sub>b</sub> (by Dalton's Law)</div>
+      </div>
+    </div>
+
+    <div style="background:#f0f4f8; border-radius:12px; padding:14px; font-size:13px; line-height:1.7; color:#333;">
+      <strong>🧠 Trick to Remember:</strong><br/>
+      Think of a pizza 🍕 being shared. If A takes 60% of the pizza (xₐ = 0.6), and A's pure pressure was 100 mmHg — then A's contribution is 60% of 100 = <strong>60 mmHg</strong>. That's exactly what Raoult's Law says!
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ TAB 5: QUIZ ═══════════════ -->
+<div class="tab-content" id="tab-quiz">
+  <div class="section">
+    <div class="section-title">Test Yourself</div>
+    <div id="quiz-container"></div>
+    <div id="quiz-score" style="text-align:center; font-size:16px; font-weight:700; color:var(--navy); padding:10px 0; display:none;"></div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer-wm">
+  <strong>© Jitesh Salve Chemistry Simulations</strong>
+  
+  Maharashtra HSC Board Chemistry | Unauthorised copying prohibited
+</div>
+
+<script>
+/* ══════════════ QUIZ DATA ══════════════ */
+const quizData = [
+  {
+    q: "According to Raoult's Law, the partial vapour pressure of component A in a solution is equal to:",
+    opts: [
+      "P°ₐ × x<sub>b</sub>",
+      "P°ₐ × xₐ",
+      "P°ₐ + xₐ",
+      "P°ₐ / xₐ"
+    ],
+    ans: 1,
+    exp: "Correct! Pₐ = P°ₐ × xₐ. The partial pressure equals pure VP multiplied by mole fraction."
+  },
+  {
+    q: "If xₐ = 0.4, then x<sub>b</sub> = ?",
+    opts: ["0.4", "0.6", "1.4", "0.04"],
+    ans: 1,
+    exp: "Correct! Since xₐ + x<sub>b</sub> = 1, so x<sub>b</sub> = 1 − 0.4 = 0.6"
+  },
+  {
+    q: "What is the total vapour pressure P<sub>t</sub> of a solution?",
+    opts: [
+      "P<sub>t</sub> = Pₐ × P<sub>b</sub>",
+      "P<sub>t</sub> = P°ₐ × P°<sub>b</sub>",
+      "P<sub>t</sub> = Pₐ + P<sub>b</sub>",
+      "P<sub>t</sub> = Pₐ − P<sub>b</sub>"
+    ],
+    ans: 2,
+    exp: "Correct! By Dalton's Law of Partial Pressures, P<sub>t</sub> = Pₐ + P<sub>b</sub>"
+  },
+  {
+    q: "For Raoult's Law to apply, both components A and B must be:",
+    opts: ["Non-volatile", "Volatile", "Solid", "Ionic"],
+    ans: 1,
+    exp: "Correct! Raoult's Law for Liq-Liq solutions requires BOTH components to be volatile."
+  },
+  {
+    q: "If P°ₐ = 120 mmHg and xₐ = 0.5, what is Pₐ?",
+    opts: ["60 mmHg", "120 mmHg", "240 mmHg", "0.5 mmHg"],
+    ans: 0,
+    exp: "Correct! Pₐ = P°ₐ × xₐ = 120 × 0.5 = 60 mmHg"
+  },
+  {
+    q: "When xₐ = 1 (pure liquid A), the total pressure P<sub>t</sub> equals:",
+    opts: ["Zero", "P°<sub>b</sub>", "P°ₐ", "P°ₐ + P°<sub>b</sub>"],
+    ans: 2,
+    exp: "Correct! When xₐ=1, x<sub>b</sub>=0. So P<sub>t</sub> = P°ₐ×1 + P°<sub>b</sub>×0 = P°ₐ"
+  },
+];
+
+let currentQ = 0, score = 0, answered = false;
+
+function buildQuiz() {
+  const c = document.getElementById('quiz-container');
+  if (currentQ >= quizData.length) {
+    c.innerHTML = '';
+    const sc = document.getElementById('quiz-score');
+    sc.style.display = 'block';
+    sc.innerHTML = `🎉 Quiz Complete!<br/>Your Score: ${score} / ${quizData.length}<br/><br/>
+      <button onclick="restartQuiz()" style="padding:10px 24px; background:var(--navy); color:var(--gold); border:none; border-radius:10px; font-size:14px; font-weight:700; cursor:pointer; font-family:inherit;">Restart Quiz</button>`;
+    return;
+  }
+  answered = false;
+  const q = quizData[currentQ];
+  c.innerHTML = `
+    <div class="quiz-card">
+      <div style="font-size:11px; color:#999; margin-bottom:6px;">Question ${currentQ+1} of ${quizData.length}</div>
+      <div class="quiz-q">${q.q}</div>
+      <div class="quiz-options">
+        ${q.opts.map((o,i) => `<button class="quiz-opt" onclick="checkAns(${i})">${String.fromCharCode(65+i)}. ${o}</button>`).join('')}
+      </div>
+      <div class="quiz-feedback" id="q-feedback"></div>
+      <button class="btn-next" id="btn-next" onclick="nextQ()">Next Question →</button>
+    </div>`;
+}
+
+function checkAns(idx) {
+  if (answered) return;
+  answered = true;
+  const q = quizData[currentQ];
+  const opts = document.querySelectorAll('.quiz-opt');
+  opts[q.ans].classList.add('correct');
+  if (idx !== q.ans) opts[idx].classList.add('wrong');
+  else score++;
+  document.getElementById('q-feedback').innerHTML =
+    idx === q.ans ? `✅ ${q.exp}` : `❌ Wrong. ${q.exp}`;
+  document.getElementById('q-feedback').style.color = idx === q.ans ? '#145a32' : '#7b241c';
+  document.getElementById('btn-next').style.display = 'block';
+}
+
+function nextQ() { currentQ++; buildQuiz(); }
+function restartQuiz() {
+  currentQ = 0; score = 0;
+  document.getElementById('quiz-score').style.display = 'none';
+  buildQuiz();
+}
+
+/* ══════════════ SIMULATION LOGIC ══════════════ */
+function updateSim() {
+  const pA0 = +document.getElementById('pA0').value;
+  const pB0 = +document.getElementById('pB0').value;
+  const xA  = +document.getElementById('xA').value / 100;
+  const xB  = 1 - xA;
+
+  const pA = pA0 * xA;
+  const pB = pB0 * xB;
+  const pT = pA + pB;
+
+  // Update display values
+  document.getElementById('pA0_val').textContent = pA0;
+  document.getElementById('pB0_val').textContent = pB0;
+  document.getElementById('xA_val').textContent  = xA.toFixed(2);
+  document.getElementById('pA0_lbl').textContent = pA0;
+  document.getElementById('pB0_lbl').textContent = pB0;
+
+  document.getElementById('pA_result').textContent = pA.toFixed(1);
+  document.getElementById('pB_result').textContent = pB.toFixed(1);
+  document.getElementById('pT_result').textContent = pT.toFixed(1);
+  document.getElementById('pT_lbl').textContent    = pT.toFixed(1);
+
+  // Live working
+  document.getElementById('working-text').innerHTML =
+    `<span style="color:var(--gold); font-weight:700;">Step-by-step Calculation:</span><br/>
+     xₐ = ${xA.toFixed(2)},  x<sub>b</sub> = ${xB.toFixed(2)}<br/>
+     Pₐ = P°ₐ × xₐ = ${pA0} × ${xA.toFixed(2)} = <strong style="color:#aed6f1;">${pA.toFixed(1)} mmHg</strong><br/>
+     P<sub>b</sub> = P°<sub>b</sub> × x<sub>b</sub> = ${pB0} × ${xB.toFixed(2)} = <strong style="color:#fad7a0;">${pB.toFixed(1)} mmHg</strong><br/>
+     P<sub>t</sub> = Pₐ + P<sub>b</sub> = ${pA.toFixed(1)} + ${pB.toFixed(1)} = <strong style="color:#a9dfbf;">${pT.toFixed(1)} mmHg</strong>`;
+
+  // Case label
+  const caseLbl = document.getElementById('case-label');
+  if (pA0 > pB0) {
+    caseLbl.style.background = 'linear-gradient(135deg, #1a5276, #2980b9)';
+    caseLbl.innerHTML = `Case 1: P°ₐ (${pA0}) &gt; P°<sub>b</sub> (${pB0}) → A is more volatile`;
+  } else if (pB0 > pA0) {
+    caseLbl.style.background = 'linear-gradient(135deg, #784212, #e67e22)';
+    caseLbl.innerHTML = `Case 2: P°<sub>b</sub> (${pB0}) &gt; P°ₐ (${pA0}) → B is more volatile`;
+  } else {
+    caseLbl.style.background = '#27ae60';
+    caseLbl.innerHTML = `P°ₐ = P°<sub>b</sub> = ${pA0} mmHg → Equal volatility`;
+  }
+
+  // Beaker liquid levels
+  const maxP = Math.max(pA0, pB0);
+  document.getElementById('liqA').style.height = Math.round(20 + 70*(pA0/200)) + '%';
+  document.getElementById('liqB').style.height = Math.round(20 + 70*(pB0/200)) + '%';
+  // Mix colour blend
+  const ra = Math.round(174 + (250-174)*xB), ga = Math.round(214 + (215-214)*xB), ba = Math.round(241 + (160-241)*xB);
+  document.getElementById('liqMix').style.background = `rgb(${ra},${ga},${ba})`;
+  document.getElementById('liqMix').style.height = '70%';
+
+  // Update bubbles
+  makeBubbles('vaporA', pA0, '#2980b9');
+  makeBubbles('vaporB', pB0, '#e67e22');
+  makeBubbles('vaporMix', pT, '#27ae60');
+
+  // Redraw graph
+  drawGraph(pA0, pB0, xA);
+}
+
+function makeBubbles(id, pressure, color) {
+  const el = document.getElementById(id);
+  el.innerHTML = '';
+  const count = Math.round(pressure / 30);
+  for (let i = 0; i < count; i++) {
+    const b = document.createElement('div');
+    b.className = 'bubble';
+    const sz = 4 + Math.random()*5;
+    b.style.cssText = `
+      width:${sz}px; height:${sz}px;
+      background:${color}; opacity:0.6;
+      left:${10 + Math.random()*60}%;
+      bottom:${Math.random()*60}%;
+      animation-delay:${Math.random()*2}s;
+      animation-duration:${1.5+Math.random()}s;
+    `;
+    el.appendChild(b);
+  }
+}
+
+/* ══════════════ GRAPH ══════════════ */
+function drawGraph(pA0, pB0, xA_current) {
+  const canvas = document.getElementById('graph');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const pad = { l: 60, r: 20, t: 30, b: 50 };
+  const gW = W - pad.l - pad.r;
+  const gH = H - pad.t - pad.b;
+  const maxP = Math.max(pA0, pB0) * 1.1;
+
+  ctx.clearRect(0, 0, W, H);
+
+  // Background
+  ctx.fillStyle = '#f8fafc';
+  ctx.fillRect(0, 0, W, H);
+
+  const toX = (xA) => pad.l + xA * gW;
+  const toY = (p)  => pad.t + gH - (p / maxP) * gH;
+
+  // Grid lines
+  ctx.strokeStyle = '#e0e7ef';
+  ctx.lineWidth = 1;
+  for (let i = 0; i <= 5; i++) {
+    const y = pad.t + (gH / 5) * i;
+    ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(pad.l + gW, y); ctx.stroke();
+    ctx.fillStyle = '#888'; ctx.font = '11px Arial'; ctx.textAlign = 'right';
+    ctx.fillText(Math.round(maxP * (5-i)/5), pad.l - 6, y + 4);
+  }
+  for (let i = 0; i <= 5; i++) {
+    const x = pad.l + (gW/5)*i;
+    ctx.beginPath(); ctx.moveTo(x, pad.t); ctx.lineTo(x, pad.t+gH); ctx.stroke();
+    ctx.fillStyle = '#888'; ctx.font = '11px Arial'; ctx.textAlign = 'center';
+    ctx.fillText((i/5).toFixed(1), x, pad.t+gH+18);
+  }
+
+  // Axes
+  ctx.strokeStyle = '#333'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(pad.l, pad.t); ctx.lineTo(pad.l, pad.t+gH); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(pad.l, pad.t+gH); ctx.lineTo(pad.l+gW, pad.t+gH); ctx.stroke();
+
+  // Axis labels
+  ctx.fillStyle = '#333'; ctx.font = 'bold 12px Arial'; ctx.textAlign = 'center';
+  ctx.fillText('Mole Fraction of A  (xₐ) →', pad.l + gW/2, H - 8);
+  ctx.save(); ctx.translate(14, pad.t + gH/2); ctx.rotate(-Math.PI/2);
+  ctx.fillText('Vapour Pressure (mmHg) →', 0, 0); ctx.restore();
+
+  // Line PA = P°A * xA
+  ctx.strokeStyle = '#2980b9'; ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  ctx.moveTo(toX(0), toY(0));
+  ctx.lineTo(toX(1), toY(pA0));
+  ctx.stroke();
+  ctx.fillStyle = '#2980b9'; ctx.font = 'bold 12px Arial'; ctx.textAlign = 'left';
+  ctx.fillText('Pₐ=P°ₐ·xₐ', toX(0.5)+4, toY(pA0*0.5)-8);
+
+  // Line PB = P°B * xB  (xB=1-xA)
+  ctx.strokeStyle = '#e67e22'; ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  ctx.moveTo(toX(0), toY(pB0));
+  ctx.lineTo(toX(1), toY(0));
+  ctx.stroke();
+  ctx.fillStyle = '#e67e22'; ctx.textAlign = 'right';
+  ctx.fillText('P2082=P°2082·x2082', toX(0.3)-4, toY(pB0*0.7)-8);
+
+  // Line PT = PA + PB
+  ctx.strokeStyle = '#27ae60'; ctx.lineWidth = 3;
+  ctx.setLineDash([6,3]);
+  ctx.beginPath();
+  ctx.moveTo(toX(0), toY(pB0));
+  ctx.lineTo(toX(1), toY(pA0));
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#27ae60'; ctx.textAlign = 'center';
+  ctx.fillText('Pₜ (Total)', toX(0.5), toY((pA0+pB0)/2)-12);
+
+  // Current point
+  const curPT = pA0*xA_current + pB0*(1-xA_current);
+  const cx = toX(xA_current), cy = toY(curPT);
+  ctx.beginPath();
+  ctx.arc(cx, cy, 9, 0, 2*Math.PI);
+  ctx.fillStyle = '#e74c3c'; ctx.fill();
+  ctx.strokeStyle = 'white'; ctx.lineWidth = 2; ctx.stroke();
+  ctx.fillStyle = '#e74c3c'; ctx.font = 'bold 11px Arial'; ctx.textAlign = 'center';
+  ctx.fillText(`(${xA_current.toFixed(2)}, ${curPT.toFixed(0)})`, cx, cy - 14);
+
+  // P°A and P°B labels on y-axis
+  ctx.fillStyle = '#2980b9'; ctx.textAlign = 'right'; ctx.font = 'bold 11px Arial';
+  ctx.fillText(`P°ₐ=${pA0}`, pad.l - 2, toY(pA0) + 4);
+  ctx.fillStyle = '#e67e22';
+  ctx.fillText(`P°ᵇ = ${pB0}`, pad.l - 2, toY(pB0) + 4);
+
+  // Watermark on graph
+  ctx.fillStyle = 'rgba(10,22,40,0.08)';
+  ctx.font = 'bold 16px Arial'; ctx.textAlign = 'center';
+  ctx.fillText('© Jitesh Salve', W/2, H/2+10);
+}
+
+/* ══════════════ TABS ══════════════ */
+function showTab(id) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  event.target.classList.add('active');
+  if (id === 'graph') drawGraph(
+    +document.getElementById('pA0').value,
+    +document.getElementById('pB0').value,
+    +document.getElementById('xA').value/100
+  );
+}
+
+/* ══════════════ INIT ══════════════ */
+updateSim();
+buildQuiz();
+</script>
+</body>
+</html>
